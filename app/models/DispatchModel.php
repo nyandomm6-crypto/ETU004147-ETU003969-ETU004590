@@ -67,17 +67,14 @@ class DispatchModel
             }
 
             $id_produit = $besoin['id_produit'];
-            $id_ville = $besoin['id_ville'];
 
-            // 2️⃣ Vérifier total disponible
             $stmt = $this->db->prepare("
             SELECT SUM(quantite) as total_disponible
             FROM don
             WHERE id_produit = ?
-            AND id_ville = ?
             AND quantite > 0
         ");
-            $stmt->execute([$id_produit, $id_ville]);
+            $stmt->execute([$id_produit]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $totalDisponible = $result['total_disponible'] ?? 0;
@@ -90,11 +87,10 @@ class DispatchModel
             $stmt = $this->db->prepare("
             SELECT * FROM don
             WHERE id_produit = ?
-            AND id_ville = ?
             AND quantite > 0
             ORDER BY date_don ASC
         ");
-            $stmt->execute([$id_produit, $id_ville]);
+            $stmt->execute([$id_produit]);
             $dons = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             $quantiteRestante = $quantiteDemandee;
