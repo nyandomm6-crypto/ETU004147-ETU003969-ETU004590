@@ -5,7 +5,7 @@ namespace app\models;
 use Flight;
 use PDO;
 
-class ObjetModels
+class BesoinModel
 {
     private PDO $db;
 
