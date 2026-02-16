@@ -21,7 +21,7 @@ class VilleModel
         return $stmt->execute([$data['nom']]);
     }
 
-    public function getAllville()
+    public function getAllVille()
     {
         $stmt = $this->db->prepare("SELECT * FROM ville");
         $stmt->execute();
