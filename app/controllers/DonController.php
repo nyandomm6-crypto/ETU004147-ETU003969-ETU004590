@@ -46,6 +46,20 @@ class DonController
             'quantite' => $data['quantite']
         ];
         $this->donModel->createDon($donnee);
+        $this->showListDon();
+
+    }
+
+    public function showListDon()
+    {
+        $dons = $this->donModel->getAllDon();
+
+        $this->app->render('listDon.php', [
+            'base_url' => Flight::get('flight.base_url'),
+            'dons' => $dons,
+            'villes' => $this->villeModel->getAllVille(),
+            'produits' => $this->produitModel->getAllProduits()
+        ]);
     }
 
 
