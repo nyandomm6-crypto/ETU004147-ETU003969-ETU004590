@@ -27,7 +27,7 @@ CREATE TABLE don (
     id_produit INT NOT NULL,
     id_ville INT NOT NULL,
     quantite INT NOT NULL,
-    date_don DATETIME DEFAULT CURRENT_TIMESTAMP
+    date_don DATETIME DEFAULT CURRENT_TIMESTAMPm
 
 );
 CREATE TABLE dispatch (
