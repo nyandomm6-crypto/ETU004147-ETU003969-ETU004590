@@ -20,4 +20,11 @@ class DonModel
         $stmt = $this->db->prepare("INSERT INTO don (id_produit, id_ville, quantite) VALUES (?, ?, ?)");
         return $stmt->execute([$data['id_produit'], $data['id_ville'], $data['quantite']]);
     }
+
+    public function getAllDon()
+    {
+        $stmt = $this->db->prepare("SELECT * FROM don");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
