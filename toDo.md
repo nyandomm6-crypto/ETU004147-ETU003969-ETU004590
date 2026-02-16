@@ -1,6 +1,6 @@
 -BASE
-    -create database sinistre
-        -create table: (Miantra)
+    ✅-create database sinistre
+        ✅-create table: (Miantra) 
             -ville(id_ville,nom_ville)
             -categorie(id_categorie,nom_categorie)
             -produit(id_produit,id_categorie,prix_unitaire,nom_produit)
@@ -8,53 +8,66 @@
             -don(id_don,id_ville,id_produit,quantite_don,quantite_Initial)
             -dispatch(id_dispatch,id_don,id_besoin,quantite_attribuee,date_dispatch)
 
-        -inserer donnee de test (Miantra)
+        ✅-inserer donnee de test (Miantra) 
     
--DASHBOARD(Ando)
-    -view : liste des villes
+✅-DASHBOARD(Ando) 
+    -view : liste des villes :
         -nom 
         -besoin
         -don
 
--Besoin(Tsanta)
-    -BesoinModel
-        -createBesoin
+✅-Besoin(Tsanta) 
+    ✅-BesoinModel
+        ✅-createBesoin
+        ✅-getAllBesoinByVille
 
-    -BesoinController
-        -createBesoin
-        -showFormBesoin : afficher le formulaire
+    ✅-BesoinController
+        ✅-createBesoin
+        ✅-showFormBesoin : afficher le formulaire
     
-    -View
-        -formBesoin.php
+    ✅-View
+        ✅-formBesoin.php
 
--Produit(Miantra)
-    -ProduitModel
-        -getAllProduit
-        -getProduitById
+✅-Produit(Miantra)
+    ✅-ProduitModel
+        ✅-getAllProduit
+        ✅-getProduitById
     
 
--Ville (Ando)
-    -VilleModel
-        -getAllVille
-        -getVilleById
+✅-Ville (Ando)
+    ✅-VilleModel
+        ✅-getAllVille
+        ✅-getVilleById
 
--Don(Miantra)
+✅-Don(Miantra)
     -DonModel
-        -createDon
+        ✅-createDon
+        -
     
     -DonController
-        -createDon
-        -showFormDon : afficher formulaire de don
+       ✅-createDon
+        ✅-showFormDon : afficher formulaire de don
 
-    -view
-        -formDon.php 
+    ✅-view
+        ✅-formDon.php 
 
--Dispatch
+-Dispatch(Ando)
     -DispatchModel
+        ✅-createDispatch
+        ✅-getDispatchId
+        ✅-getDispatchDetail
 
     -DispatchController
+        ✅-showAllDispatch
+        ✅-showDispatchDetail
+        ✅-showFormDispatch
+        ✅-createDispatch
 
     -View
+        ✅-formDispatch : afficher formulaire de disptch
+
+
+-Design(Tsanta) : en cours
         
 
 
