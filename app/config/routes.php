@@ -25,7 +25,7 @@ $dispatchController = new DispatchController($app);
 
 $router->get('/formBesoin', [$BesoinController, 'showFormBesoin']);
 $router->get('/besoin', [$BesoinController, 'showListBesoin']);
-$router->get('/dashboard', [$villeController, 'showDashboard']);
+$router->get('/', [$villeController, 'showDashboard']);
 $router->get('/showFormDon', [$donController, 'showFormDon']);
 $router->get('/showFormDispatch', [$dispatchController, 'showFormDispatch']);
 

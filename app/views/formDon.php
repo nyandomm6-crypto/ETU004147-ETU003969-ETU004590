@@ -160,7 +160,7 @@
             </div>
         </form>
 
-        <a href="<?= $base_url ?>/dashboard" class="back-link">← Retour au tableau de bord</a>
+        <a href="<?= $base_url ?>/" class="back-link">← Retour au tableau de bord</a>
     </div>
 
         </main>
