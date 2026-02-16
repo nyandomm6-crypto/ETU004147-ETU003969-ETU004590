@@ -26,4 +26,12 @@ class ProduitModel
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
+    public function getPrixUnitaireByIdProduit($id_produit)
+    {
+        $stmt = $this->db->prepare("SELECT prix_unitaire FROM produit WHERE id_produit = ?");
+        $stmt->execute([$id_produit]);
+        return $stmt->fetchColumn();
+    }
 }

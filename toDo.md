@@ -72,12 +72,12 @@ Version 1
 
 Version 2
 
--Don
+-Don(Miantra)
     -DonModel
         -getAllDonArgent
     
     
--Besoin
+-Besoin(Ando)
     -BesoinModel
         -getAllBesoinRestantByCategorie
 
@@ -91,9 +91,9 @@ Version 2
         -createAchat
 
     -AchatController
-    
+
     -view
-        -formuAchat.php :
+        -formuAchat.php :(Tsanta)
             -total don argent atuel
             -frais achat
             -quantite_achat
