@@ -53,7 +53,17 @@ class DispatchController
     public function createDispatch()
     {
         $data = Flight::request()->data->getData();
-        $this->dispatchModel->createDispatch($data);
-        $this->app->redirect('/dispatch');
+
+        $id_besoin = $data['id_besoin'];
+        $quantite = $data['quantite'];
+        $result = $this->dispatchModel->dispatchDon($id_besoin, $quantite);
+
+        // Render the form with the result message so errors are visible
+        $this->app->render('formDispatch', [
+            'base_url' => Flight::get('base_url'),
+            'besoin' => $this->besoinModel->getAllBesoin(),
+            'message' => $result['message'] ?? null,
+            'success' => $result['success'] ?? false
+        ]);
     }
 }

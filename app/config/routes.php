@@ -34,6 +34,8 @@ $router->get('/showFormDispatch', [$dispatchController, 'showFormDispatch']);
 
 $router->post('/formulaireBesoin', [$BesoinController, 'createBesoinController']);
 $router->post('/createDon', [$donController, 'createDon']);
+$router->post('/dispatch/create', [$dispatchController, 'createDispatch']);
+
 
 
 
