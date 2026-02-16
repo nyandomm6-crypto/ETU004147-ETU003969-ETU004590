@@ -22,7 +22,7 @@ $BesoinController = new BesoinController($app);
 $donController = new DonController($app);
 
 $router->get('/formBesoin', [$BesoinController, 'showFormBesoin']);
-$router->get('/besoin', [$BesoinController, 'showBesoin']);
+$router->get('/besoin', [$BesoinController, 'showListBesoin']);
 $router->get('/dashboard', [$villeController, 'showDashboard']);
 $router->get('/showFormDon', [$donController, 'showFormDon']);
 

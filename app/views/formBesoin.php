@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <form action="/Besoin" method="post">
+    <form action="<?php echo $base_url; ?>/formulaireBesoin" method="post">
 
         <div>
             <label for="id_ville">Ville</label>
@@ -44,7 +44,7 @@
             <button type="submit">Enregistrer le besoin</button>
         </div>
 
-        <button type="submit">Envoyer</button>
+        
     </form>
 </body>
 
