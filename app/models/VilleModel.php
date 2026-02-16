@@ -31,15 +31,41 @@ class VilleModel
 
     public function getVillebyIdProduit($id_produit)
     {
-        $stmt = $this->db->prepare("SELECT v.* FROM ville v JOIN besoin b ON v.id_ville = b.id_ville WHERE b.id_produit = ? GROUP BY v.id_ville");
+        // cities that have a besoin for this product
+        $stmt = $this->db->prepare("SELECT DISTINCT v.id_ville, v.nom_ville FROM ville v JOIN besoin b ON v.id_ville = b.id_ville WHERE b.id_produit = ?");
         $stmt->execute([$id_produit]);
         $ville = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmsumBesoin = $this->db->prepare("SELECT v.*, SUM(b.quantite) AS total_besoin FROM ville v JOIN besoin b ON v.id_ville = b.id_ville GROUP BY v.id_ville");
-        $stmsumBesoin->execute();
+
+        // total besoin per city for this product
+        $stmsumBesoin = $this->db->prepare("SELECT b.id_ville, SUM(b.quantite) AS total_besoin FROM besoin b WHERE b.id_produit = ? GROUP BY b.id_ville");
+        $stmsumBesoin->execute([$id_produit]);
         $sumBesoin = $stmsumBesoin->fetchAll(PDO::FETCH_ASSOC);
-        $stmsumBesoinRestant = $this->db->prepare("SELECT d.id_ville, SUM(d.quantite_initial - d.quantite) AS total_restant FROM don d WHERE d.id_produit = ? GROUP BY d.id_ville");
-        $stmsumBesoinRestant->execute([$id_produit]);
-        $sumBesoinRestant = $stmsumBesoinRestant->fetchAll(PDO::FETCH_ASSOC);
+
+        // total attribue per city for this product (from dispatch -> besoin -> ville)
+        $stmsumAttribue = $this->db->prepare(
+            "SELECT b.id_ville, COALESCE(SUM(d.quantite_attribuee),0) AS total_attribue
+             FROM dispatch d
+             JOIN besoin b ON d.id_besoin = b.id_besoin
+             WHERE b.id_produit = ?
+             GROUP BY b.id_ville"
+        );
+        $stmsumAttribue->execute([$id_produit]);
+        $sumAttribue = $stmsumAttribue->fetchAll(PDO::FETCH_ASSOC);
+
+        $sumBesoinRestant = [];
+        $attribueByVille = [];
+        foreach ($sumAttribue as $a) {
+            $attribueByVille[(int)$a['id_ville']] = (int)$a['total_attribue'];
+        }
+        foreach ($sumBesoin as $b) {
+            $vid = (int)$b['id_ville'];
+            $totalBesoin = (int)$b['total_besoin'];
+            $totalAttribue = $attribueByVille[$vid] ?? 0;
+            $sumBesoinRestant[] = [
+                'id_ville' => $vid,
+                'total_restant' => max(0, $totalBesoin - $totalAttribue)
+            ];
+        }
         return ['ville' => $ville, 'sumBesoin' => $sumBesoin, 'sumBesoinRestant' => $sumBesoinRestant];
     }
 

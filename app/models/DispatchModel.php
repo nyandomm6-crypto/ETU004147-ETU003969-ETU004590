@@ -143,10 +143,7 @@ class DispatchModel
         }
     }
 
-    /**
-     * Retourne un résumé des dispatchs par ville: total besoins, total attribué, restant
-     * @return array<int,array{ id_ville:int, nom_ville:string, total_besoin:int, total_attribue:int, besoin_restant:int }>
-     */
+   
     public function getDispatchSummaryByVille(): array
     {
         $sql = "SELECT v.id_ville, v.nom_ville,
