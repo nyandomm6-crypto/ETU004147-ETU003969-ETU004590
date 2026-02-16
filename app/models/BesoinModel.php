@@ -17,15 +17,14 @@ class BesoinModel
     public function createBesoin(array $data): bool
     {
         $stmt = $this->db->prepare(
-            "INSERT INTO besoin (id_ville, id_produit, quantite, date_saisie)
-             VALUES (:id_ville, :id_produit, :quantite, :date_saisie)"
+            "INSERT INTO besoin (id_ville, id_produit, quantite)
+             VALUES (:id_ville, :id_produit, :quantite)"
         );
 
         return $stmt->execute([
             ':id_ville' => $data['id_ville'],
             ':id_produit' => $data['id_produit'],
-            ':quantite' => $data['quantite'],
-            ':date_saisie' => $data['date_saisie']
+            ':quantite' => $data['quantite']
         ]);
     }
     public function getAllBesoin(): array

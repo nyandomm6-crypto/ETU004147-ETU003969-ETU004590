@@ -29,13 +29,15 @@ class BesoinController
         
     }
 
-    public function createBesoinController(array $data)
+    public function createBesoinController()
     {
+        $data = Flight::request()->data->getData();
+
         $donnee = [
             'id_ville' => $data['id_ville'],
             'id_produit' => $data['id_produit'],
-            'quantite' => $data['quantite'],
-            'date_saisie' => $data['date_saisie']
+            'quantite' => $data['quantite']
+            
         ];
 
         $ok = $this->besoinModel->createBesoin($donnee);
