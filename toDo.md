@@ -7,6 +7,7 @@
             -besoin(id_besoin,id_ville,id_produit,quantite_besoin,date_saisie)
             -don(id_don,id_ville,id_produit,quantite_don,quantite_Initial)
             -dispatch(id_dispatch,id_don,id_besoin,quantite_attribuee,date_dispatch)
+            -achat(id_achat,id_produit,quantite_achat,frais_achat)
 
         ✅-inserer donnee de test (Miantra) 
 
@@ -74,27 +75,28 @@ Version 2
 -Don
     -DonModel
         -getAllDonArgent
-        -getAllDonAutre
     
-        
-
+    
 -Besoin
     -BesoinModel
         -getAllBesoinRestantByCategorie
 
     -BesoinController
-        -calculSommeBesoinParVille
 
     -view
         -listBesoinRestant.php : afficher liste besoin restant par categorie en affichant les villes correspondant
 
 -Achat
-    -
+    -AchatModel
+        -createAchat
+
+    -AchatController
+    
     -view
         -formuAchat.php :
             -total don argent atuel
             -frais achat
-            -montant
+            -quantite_achat
         
 
 -Design(Tsanta) : en cours

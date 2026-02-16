@@ -41,3 +41,11 @@ CREATE TABLE dispatch (
     date_dispatch DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+create table achat(
+    id_achat INT AUTO_INCREMENT PRIMARY KEY,
+    id_produit INT NOT NULL,
+    quantite_achats DECIMAL(10,2) NOT NULL,
+    frais_achats DECIMAL(10,2) NOT NULL,
+    date_achat DATETIME DEFAULT CURRENT_TIMESTAMP
+
+);
