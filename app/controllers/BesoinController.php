@@ -17,34 +17,21 @@ class BesoinController
         $this->besoinModel = new BesoinModel();
     }
 
-<<<<<<< Updated upstream
     public function createBesoinController()
     {
         $request = Flight::request();
         $base_url = Flight::get('flight.base_url');
-        
-         $donnee = [
+
+        $donnee = [
             'id_ville' => $request->data->id_ville,
             'id_produit' => $request->data->id_produit,
             'quantite' => $request->data->quantite,
-            'date_saisie' => $request->data->date_saisie 
+            'date_saisie' => $request->data->date_saisie
         ];
 
         $this->besoinModel->createBesoin($donnee);
 
         $this->app->redirect($base_url . '/besoin');
-=======
-    public function createDon(array $data)
-    {
-        $donnee = [
-            'id_ville' => $data['id_ville'],
-            'id_produit' => $data['id_produit'],
-            'quantite' => $data['quantite']
-        ];
-
-        $ok = $this->objet->createBesoin($donnee);
-
->>>>>>> Stashed changes
     }
 
     public function showBesoin()
