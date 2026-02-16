@@ -133,6 +133,39 @@
 		.tag-blue  { background: #dbeafe; color: #1d4ed8; }
 		.tag-green { background: #dcfce7; color: #15803d; }
 		.empty { text-align: center; padding: 32px; color: #94a3b8; font-size: 14px; }
+		.table-wrap { overflow: auto; }
+		.table-modern {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 0;
+		}
+		.table-modern thead th {
+			position: sticky;
+			top: 0;
+			z-index: 1;
+		}
+		.table-modern td.num { text-align: right; font-variant-numeric: tabular-nums; }
+		.table-modern td.center { text-align: center; }
+		.table-modern .mono {
+			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+			font-size: 12px;
+		}
+		.pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 5px 10px;
+			border-radius: 999px;
+			font-size: 12px;
+			font-weight: 700;
+			border: 1px solid;
+			white-space: nowrap;
+		}
+		.pill-blue { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+		.pill-slate { background: #f8fafc; border-color: #e2e8f0; color: #334155; }
+		.pill-green { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+		.pill-amber { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+		.card-subtitle { padding: 0 22px 14px; color: #64748b; font-size: 13px; }
 	</style>
 </head>
 <body>
@@ -222,29 +255,32 @@
 		<?php endif; ?>
 
 		<?php if (!empty($dispatch_summary) && is_array($dispatch_summary)): ?>
-		<section>
-			<h2>Résumé des dispatchs par ville</h2>
-			<table border="1" cellpadding="6" cellspacing="0">
-				<thead>
-					<tr>
-						<th>Ville</th>
-						<th>Total besoins</th>
-						<th>Total attribué</th>
-						<th>Besoins restants</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($dispatch_summary as $s): ?>
-						<tr>
-							<td><?php echo htmlspecialchars($s['nom_ville'] ?? ''); ?></td>
-							<td><?php echo htmlspecialchars($s['total_besoin'] ?? 0); ?></td>
-							<td><?php echo htmlspecialchars($s['total_attribue'] ?? 0); ?></td>
-							<td><?php echo htmlspecialchars($s['besoin_restant'] ?? 0); ?></td>
-						</tr>
-					<?php endforeach; ?>
-				</tbody>
-			</table>
-		</section>
+			<div class="section-title"><h2>Résumé des dispatchs par ville</h2><span class="line"></span></div>
+			<div class="card">
+				<div class="card-head"><span class="dot dot-amber"></span> Synthèse</div>
+				<div class="table-wrap">
+					<table class="table-modern">
+						<thead>
+							<tr>
+								<th>Ville</th>
+								<th class="num">Total besoins</th>
+								<th class="num">Total attribué</th>
+								<th class="num">Restant</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ($dispatch_summary as $s): ?>
+								<tr>
+									<td><span class="pill pill-slate"><?php echo htmlspecialchars($s['nom_ville'] ?? ''); ?></span></td>
+									<td class="num"><span class="pill pill-slate"><?php echo htmlspecialchars($s['total_besoin'] ?? 0); ?></span></td>
+									<td class="num"><span class="pill pill-green"><?php echo htmlspecialchars($s['total_attribue'] ?? 0); ?></span></td>
+									<td class="num"><span class="pill pill-amber"><?php echo htmlspecialchars($s['besoin_restant'] ?? 0); ?></span></td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		<?php endif; ?>
 
 		<?php if (!empty($dispatches) && is_array($dispatches)): ?>
@@ -281,30 +317,34 @@
 		<?php if (!empty($dispatches) && is_array($dispatches)): ?>
 		<div class="section-title"><h2>Résultats du dispatch</h2><span class="line"></span></div>
 		<div class="card">
-			<table>
-				<thead>
-					<tr>
-						<th>Ville</th>
-						<th>Produit</th>
-						<th>Don (ID)</th>
-						<th>Besoin (ID)</th>
-						<th>Qté attribuée</th>
-						<th>Date dispatch</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php foreach ($dispatches as $d): ?>
+			<div class="card-head"><span class="dot dot-amber"></span> Attributions effectuées</div>
+			<div class="card-subtitle">Aperçu des attributions (don → besoin) par ville et produit.</div>
+			<div class="table-wrap">
+				<table class="table-modern">
+					<thead>
 						<tr>
-							<td><?php echo htmlspecialchars($d['nom_ville'] ?? ''); ?></td>
-							<td><?php echo htmlspecialchars($d['nom_produit'] ?? ''); ?></td>
-							<td><?php echo htmlspecialchars($d['id_don'] ?? ''); ?></td>
-							<td><?php echo htmlspecialchars($d['id_besoin'] ?? ''); ?></td>
-							<td><span class="tag tag-blue"><?php echo htmlspecialchars($d['quantite_attribuee'] ?? ''); ?></span></td>
-							<td><?php echo htmlspecialchars($d['date_dispatch'] ?? ''); ?></td>
+							<th>Ville</th>
+							<th>Produit</th>
+							<th class="center">Don</th>
+							<th class="center">Besoin</th>
+							<th class="num">Qté attribuée</th>
+							<th>Date dispatch</th>
 						</tr>
-					<?php endforeach; ?>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<?php foreach ($dispatches as $d): ?>
+							<tr>
+								<td><span class="pill pill-slate"><?php echo htmlspecialchars($d['nom_ville'] ?? ''); ?></span></td>
+								<td><?php echo htmlspecialchars($d['nom_produit'] ?? ''); ?></td>
+								<td class="center"><span class="pill pill-blue mono">#<?php echo htmlspecialchars($d['id_don'] ?? ''); ?></span></td>
+								<td class="center"><span class="pill pill-blue mono">#<?php echo htmlspecialchars($d['id_besoin'] ?? ''); ?></span></td>
+								<td class="num"><span class="pill pill-green"><?php echo htmlspecialchars($d['quantite_attribuee'] ?? ''); ?></span></td>
+								<td><span class="pill pill-slate"><?php echo htmlspecialchars($d['date_dispatch'] ?? ''); ?></span></td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<?php endif; ?>
         <?php endif; ?>
