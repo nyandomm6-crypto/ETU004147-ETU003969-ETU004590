@@ -250,7 +250,7 @@
                                 <td><span class="tag tag-blue"><?= (int) ($b['total_besoin'] ?? 0) ?></span></td>
                                 <td><span class="tag tag-green"><?= (int) ($b['total_attribue'] ?? 0) ?></span></td>
                                 <td><span class="tag tag-red"><?= (int) ($b['reste'] ?? 0) ?></span></td>
-                                <form action="<?= $base_url ?>/acheterBesoin" method="post">
+                                <form action="<?= $base_url ?>/showFormAchat" method="post">
                                     <input type="hidden" name="id_ville" value="<?= (int) ($b['id_ville'] ?? 0) ?>">
                                     <input type="hidden" name="id_produit" value="<?= (int) ($b['id_produit'] ?? 0) ?>">
                                     <input type="hidden" name="reste" value="<?= (int) ($b['reste'] ?? 0) ?>">   

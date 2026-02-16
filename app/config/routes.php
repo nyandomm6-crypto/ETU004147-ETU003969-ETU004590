@@ -5,6 +5,8 @@ use app\controllers\BesoinController;
 use app\controllers\DispatchController;
 use app\controllers\VilleController;
 use app\controllers\DonController;
+use app\controllers\AchatController;
+
 
 
 
@@ -22,6 +24,7 @@ $villeController = new VilleController($app);
 $BesoinController = new BesoinController($app);
 $donController = new DonController($app);
 $dispatchController = new DispatchController($app);
+$achatController = new AchatController($app);
 
 $router->get('/formBesoin', [$BesoinController, 'showFormBesoin']);
 $router->get('/besoin', [$BesoinController, 'showListBesoin']);
@@ -33,6 +36,8 @@ $router->get('/listBesoinRestant', [$villeController, 'getListBesoinRestant']);
 
 
 
+
+$router->post('/showFormAchat', [$achatController, 'showFormAchat']);
 $router->post('/formulaireBesoin', [$BesoinController, 'createBesoinController']);
 $router->post('/createDon', [$donController, 'createDon']);
 $router->post('/dispatch/create', [$dispatchController, 'createDispatch']);

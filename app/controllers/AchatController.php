@@ -8,7 +8,7 @@ use Flight;
 use flight\Engine;
 
 
-class DonController
+class AchatController
 {
 
     protected Engine $app;
@@ -24,7 +24,7 @@ class DonController
 
     public function showFormAchat()
     {
-        $this->app->render('formAchat.php', [
+        $this->app->render('formAchat', [
             'base_url' => Flight::get('flight.base_url')
         ]);
     }
