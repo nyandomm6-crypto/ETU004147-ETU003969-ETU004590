@@ -12,9 +12,15 @@
 			background: linear-gradient(135deg, #e8f0fe 0%, #f5f7fa 100%);
 			min-height: 100vh;
 			display: flex;
+			flex-direction: column;
+			padding: 24px;
+		}
+		.page {
+			flex: 1;
+			display: flex;
 			align-items: center;
 			justify-content: center;
-			padding: 24px;
+			width: 100%;
 		}
 		.card {
 			background: #fff;
@@ -119,6 +125,7 @@
 
 <body>
 	
+	<main class="page">
 	<div class="card">
 		<div class="card-header">
 			<span class="badge">BNGRC</span>
@@ -161,10 +168,9 @@
 
 		<a class="back-link" href="<?= $base_url ?>/dashboard">← Retour au tableau de bord</a>
 	</div>
+	</main>
 
-	  <?php
-    Flight::render('partial/footer.php');
-    ?>
+	<?php Flight::render('partial/footer.php'); ?>
 </body>
 
 </html>
