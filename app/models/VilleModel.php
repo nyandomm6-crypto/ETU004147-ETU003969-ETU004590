@@ -77,37 +77,7 @@ class VilleModel
 
     public function getResteBesoinParProduitParVille(): array
     {
-<<<<<<< Updated upstream
-        $produits = $this->produitModel->getAllProduits();
-        $result = [];
-
-        foreach ($produits as $pr) {
-            $id_produit = (int)$pr['id_produit'];
-            $data = $this->getVillebyIdProduit($id_produit);
-            $villes = $data['ville'] ?? [];
-            $sommeRestant = $data['sumBesoinRestant'] ?? [];
-
-            // index restant by id_ville for quick lookup
-            $restantByVille = [];
-            foreach ($sommeRestant as $r) {
-                $restantByVille[(int)$r['id_ville']] = (int)$r['total_restant'];
-            }
-
-            foreach ($villes as $v) {
-                $vid = (int)$v['id_ville'];
-                $result[] = [
-                    'id_produit' => $id_produit,
-                    'nom_produit' => $pr['nom_produit'] ?? null,
-                    'id_ville' => $vid,
-                    'nom_ville' => $v['nom_ville'] ?? ($v['nom'] ?? null),
-                    'total_restant' => $restantByVille[$vid] ?? 0
-                ];
-            }
-        }
-
-        return $result;
-=======
-        $sql = "SELECT v.id_ville, v.nom_ville,
+$sql = "SELECT v.id_ville, v.nom_ville,
                        p.id_produit, p.nom_produit,
                        SUM(b.quantite) AS total_besoin,
                        COALESCE(SUM(d.quantite_attribuee), 0) AS total_attribue,
@@ -122,7 +92,6 @@ class VilleModel
 
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
->>>>>>> Stashed changes
     }
 
 
