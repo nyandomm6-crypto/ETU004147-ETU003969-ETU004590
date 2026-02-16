@@ -49,7 +49,7 @@ class VilleController
 
     public function getListBesoinRestant()
     {
-        $besoins = $this->villeModel->getRestant_besoin_parVille();
+        $besoins = $this->villeModel->getResteBesoinParProduitParVille();
         $this->app->render('listBesoinRestant.php', [
             'base_url' => Flight::get('flight.base_url'),
             'besoins' => $besoins
