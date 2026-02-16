@@ -28,6 +28,7 @@ $router->get('/besoin', [$BesoinController, 'showListBesoin']);
 $router->get('/', [$villeController, 'showDashboard']);
 $router->get('/showFormDon', [$donController, 'showFormDon']);
 $router->get('/showFormDispatch', [$dispatchController, 'showFormDispatch']);
+$router->get('/listBesoinRestant', [$villeController, 'getListBesoinRestant']);
 
 
 
