@@ -148,7 +148,6 @@
         <table>
             <thead>
                 <tr>
-                    <th>Ville</th>
                     <th>Produit</th>
                     <th>Quantité</th>
                     <th>Date de saisie</th>
@@ -157,7 +156,6 @@
             <tbody>
                 <?php foreach ($dons as $don): ?>
                     <tr>
-                        <td><?= htmlspecialchars($don['id_ville']) ?></td>
                         <td><?= htmlspecialchars($don['id_produit']) ?></td>
                         <td><span class="tag tag-blue"><?= htmlspecialchars($don['quantite']) ?></span></td>
                         <td><?= htmlspecialchars($don['date_don']) ?></td>

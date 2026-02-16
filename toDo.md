@@ -9,6 +9,8 @@
             -dispatch(id_dispatch,id_don,id_besoin,quantite_attribuee,date_dispatch)
 
         ✅-inserer donnee de test (Miantra) 
+
+Version 1
     
 ✅-DASHBOARD(Ando) 
     -view : liste des villes :
@@ -67,7 +69,35 @@
         ✅-formDispatch : afficher formulaire de disptch
 
 
+Version 2
+
+-Don
+    -DonModel
+        -getAllDonArgent
+        -getAllDonAutre
+        -
+
+-Besoin
+    -BesoinModel
+        -getAllBesoinRestantByCategorie
+
+    -BesoinController
+        -calculSommeBesoinParVille
+
+    -view
+        -listBesoinRestant.php : afficher liste besoin restant par categorie en affichant les villes correspondant
+
+-Achat
+    -
+    -view
+        -formuAchat.php :
+            -total don argent atuel
+            -frais achat
+            -montant
+        
+
 -Design(Tsanta) : en cours
+
         
 
 
