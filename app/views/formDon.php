@@ -125,19 +125,6 @@
         <form action="<?= $base_url ?>/createDon" method="post">
 
             <div class="form-group">
-                <label for="id_ville">Ville</label>
-                <select name="id_ville" id="id_ville" required>
-                    <option value="">-- choisir --</option>
-                    <?php if (!empty($villes)):
-                        foreach ($villes as $v): ?>
-                            <option value="<?php echo (int) $v['id_ville']; ?>">
-                                <?php echo htmlspecialchars($v['nom_ville']); ?>
-                            </option>
-                        <?php endforeach; endif; ?>
-                </select>
-            </div>
-
-            <div class="form-group">
                 <label for="id_produit">Produit</label>
                 <select name="id_produit" id="id_produit" required>
                     <option value="">-- choisir --</option>
