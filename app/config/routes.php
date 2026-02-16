@@ -1,6 +1,7 @@
 <?php
 
-use app\controllers\BesoinController;
+use app\controllers\VilleController;
+
 
 
 
@@ -12,22 +13,15 @@ use flight\net\Router;
  * @var Engine $app
  */
 
-$BesoinController = new BesoinController($app);
+$villeController = new VilleController($app);
 
 
 
 
 
-$router->get('/formBesoin', [$BesoinController, 'showFormBesoin']);
-
-$router->get('/besoin', [$BesoinController, 'showBesoin']);
-
-$router->post('/formulaireBesoin', [$BesoinController, 'createBesoinController']);
+$router->get('/dashboard', [$villeController, 'showDashboard']);
 
 
 
 
-
-
- 
 

@@ -1,3 +1,6 @@
+create DATABASE sinistre if not EXISTS;
+USE sinistre;
+
 CREATE TABLE ville (
     id_ville INT AUTO_INCREMENT PRIMARY KEY,
     nom_ville VARCHAR(50) NOT NULL
