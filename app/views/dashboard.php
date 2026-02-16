@@ -17,9 +17,9 @@
 	<h1>Tableau de bord</h1>
 
 	<nav>
-		<a href="<?php echo $base_url; ?>/besoin_form">Saisir un besoin</a> |
-		<a href="<?php echo $base_url; ?>/don_form">Saisir un don</a> |
-		<a href="<?php echo $base_url; ?>/dispatch">Simuler dispatch</a>
+		<a href="<?php echo $base_url; ?>/formBesoin">Saisir un besoin</a> |
+		<a href="<?php echo $base_url; ?>/showFormDon">Saisir un don</a> |
+		<a href="<?php echo $base_url; ?>/showFormDispatch">Simuler dispatch</a>
 	</nav>
 
 	<section>
