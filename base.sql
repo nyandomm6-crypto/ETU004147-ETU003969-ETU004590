@@ -22,13 +22,13 @@ CREATE TABLE besoin (
     id_besoin INT AUTO_INCREMENT PRIMARY KEY,
     id_ville INT NOT NULL,
     id_produit INT NOT NULL,
-    quantite INT NOT NULL,
+    quantite_besoin INT NOT NULL,
     date_saisie DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE don (
     id_don INT AUTO_INCREMENT PRIMARY KEY,
     id_produit INT NOT NULL,
-    quantite INT NOT NULL,
+    quantite_don INT NOT NULL,
     date_don DATETIME DEFAULT CURRENT_TIMESTAMP
 
 );
