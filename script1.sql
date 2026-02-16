@@ -1,4 +1,4 @@
-create DATABASE sinistre if not EXISTS;
+create DATABASE sinistre;
 USE sinistre;
 
 CREATE TABLE ville (
