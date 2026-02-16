@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\ProduitModel;
+use app\models\VilleModel;
 use Flight;
 use flight\Engine;
 use app\models\DispatchModel;
@@ -13,12 +15,16 @@ class DispatchController
 
     protected DispatchModel $dispatchModel;
     protected BesoinModel $besoinModel;
+    protected ProduitModel $produitModel;
+    protected VilleModel $villeModel;
 
     public function __construct(Engine $app)
     {
         $this->app = $app;
         $this->dispatchModel = new DispatchModel();
         $this->besoinModel = new BesoinModel();
+        $this->produitModel = new ProduitModel();
+        $this->villeModel = new VilleModel();
     }
 
 
@@ -48,7 +54,9 @@ class DispatchController
             'error' => null,
             'succes' => null,
             'base_url' => Flight::get('flight.base_url'),
-            'besoin' => $this->besoinModel->getAllBesoin()
+            'besoin' => $this->besoinModel->getAllBesoin(),
+            'produit' => $this->produitModel->getAllProduits()
+
         ]);
     }
 
@@ -61,6 +69,15 @@ class DispatchController
         $result = $this->dispatchModel->dispatchDon($id_besoin, $quantite);
 
         $this->app->redirect('/');
-        
+
+    }
+
+    //json
+    public function getInfoByProduit()
+    {
+        $data = Flight::request()->data->getData();
+        $id_produit = $data['id_produit'];
+        $result = $this->villeModel->getVillebyIdProduit($id_produit);
+        Flight::json($result);
     }
 }

@@ -37,6 +37,9 @@ $router->post('/createDon', [$donController, 'createDon']);
 $router->post('/dispatch/create', [$dispatchController, 'createDispatch']);
 
 
+$router->post('/dispatch/getInfoByProduit', [$dispatchController, 'getInfoByProduit']);
+
+
 
 
 

@@ -19,6 +19,7 @@ class VilleController
     protected DonModel $donModel;
     protected BesoinModel $besoinModel;
     protected DispatchModel $dispatchModel;
+    protected ProduitModel $produitModel;
 
     public function __construct(Engine $app)
     {
@@ -27,6 +28,7 @@ class VilleController
         $this->donModel = new DonModel();
         $this->besoinModel = new BesoinModel();
         $this->dispatchModel = new DispatchModel();
+        $this->produitModel = new ProduitModel();
     }
 
     public function showDashboard()
@@ -40,7 +42,7 @@ class VilleController
             'villes' => $villes,
             'dons' => $dons,
             'dispatch_summary' => $dispatchSummary,
-            
+            'produit' => $this->produitModel->getAllProduits()
         ]);
     }
 

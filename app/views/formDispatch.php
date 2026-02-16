@@ -6,7 +6,12 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Simuler dispatch — BNGRC</title>
 	<style>
-		* { margin: 0; padding: 0; box-sizing: border-box; }
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
 		body {
 			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 			background: linear-gradient(135deg, #e8f0fe 0%, #f5f7fa 100%);
@@ -15,6 +20,7 @@
 			flex-direction: column;
 			padding: 24px;
 		}
+
 		.page {
 			flex: 1;
 			display: flex;
@@ -22,18 +28,21 @@
 			justify-content: center;
 			width: 100%;
 		}
+
 		.card {
 			background: #fff;
 			border-radius: 16px;
-			box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
 			padding: 40px 36px 32px;
 			width: 100%;
 			max-width: 650px;
 		}
+
 		.card-header {
 			text-align: center;
 			margin-bottom: 22px;
 		}
+
 		.card-header .badge {
 			display: inline-block;
 			background: #1a56db;
@@ -46,19 +55,23 @@
 			border-radius: 20px;
 			margin-bottom: 10px;
 		}
+
 		.card-header h1 {
 			font-size: 22px;
 			color: #1e293b;
 			font-weight: 700;
 		}
+
 		.card-header p {
 			color: #64748b;
 			font-size: 13px;
 			margin-top: 4px;
 		}
+
 		.form-group {
 			margin-bottom: 18px;
 		}
+
 		.form-group label {
 			display: block;
 			font-size: 13px;
@@ -66,6 +79,7 @@
 			color: #334155;
 			margin-bottom: 6px;
 		}
+
 		.form-group select,
 		.form-group input {
 			width: 100%;
@@ -78,12 +92,14 @@
 			transition: border-color .2s, box-shadow .2s;
 			outline: none;
 		}
+
 		.form-group select:focus,
 		.form-group input:focus {
 			border-color: #1a56db;
-			box-shadow: 0 0 0 3px rgba(26,86,219,0.12);
+			box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.12);
 			background: #fff;
 		}
+
 		.btn-submit {
 			width: 100%;
 			padding: 12px;
@@ -97,11 +113,16 @@
 			transition: transform .15s, box-shadow .2s;
 			margin-top: 6px;
 		}
+
 		.btn-submit:hover {
 			transform: translateY(-1px);
-			box-shadow: 0 4px 14px rgba(26,86,219,0.35);
+			box-shadow: 0 4px 14px rgba(26, 86, 219, 0.35);
 		}
-		.btn-submit:active { transform: translateY(0); }
+
+		.btn-submit:active {
+			transform: translateY(0);
+		}
+
 		.alert {
 			border-radius: 12px;
 			padding: 12px 14px;
@@ -109,8 +130,19 @@
 			font-size: 13px;
 			border: 1px solid;
 		}
-		.alert-success { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
-		.alert-error { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
+
+		.alert-success {
+			background: #ecfdf5;
+			border-color: #a7f3d0;
+			color: #065f46;
+		}
+
+		.alert-error {
+			background: #fef2f2;
+			border-color: #fecaca;
+			color: #7f1d1d;
+		}
+
 		.back-link {
 			display: block;
 			text-align: center;
@@ -119,58 +151,121 @@
 			color: #64748b;
 			text-decoration: none;
 		}
-		.back-link:hover { color: #1a56db; }
+
+		.back-link:hover {
+			color: #1a56db;
+		}
 	</style>
 </head>
 
 <body>
-	
+
 	<main class="page">
-	<div class="card">
-		<div class="card-header">
-			<span class="badge">BNGRC</span>
-			<h1>Simulation / Insertion de dispatch</h1>
-			<p>Choisissez un besoin et attribuez une quantité</p>
-		</div>
+		<div class="card">
+			<div class="card-header">
+				<span class="badge">BNGRC</span>
+				<h1>Simulation / Insertion de dispatch</h1>
+				<p>Choisissez un besoin et attribuez une quantité</p>
+			</div>
 
-		<?php if (isset($message)): ?>
-			<?php if (!empty($success)): ?>
-				<div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div>
-			<?php else: ?>
-				<div class="alert alert-error"><?php echo htmlspecialchars($message); ?></div>
+			<?php if (isset($message)): ?>
+				<?php if (!empty($success)): ?>
+					<div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div>
+				<?php else: ?>
+					<div class="alert alert-error"><?php echo htmlspecialchars($message); ?></div>
+				<?php endif; ?>
 			<?php endif; ?>
-		<?php endif; ?>
 
-		<form method="post" action="<?= $base_url ?>/dispatch/create">
-			<div class="form-group">
-				<label for="id_besoin">Sélectionner un besoin</label>
-				<select name="id_besoin" id="id_besoin" required>
-					<option value="">-- choisir --</option>
-					<?php if (!empty($besoin) && is_array($besoin)):
-						foreach ($besoin as $b): ?>
-							<option value="<?php echo (int) $b['id_besoin']; ?>">ID <?php echo (int) $b['id_besoin']; ?> - Ville
-								<?php echo htmlspecialchars($b['id_ville']); ?> - Produit
-								<?php echo htmlspecialchars($b['id_produit']); ?> - Qté demandée:
-								<?php echo htmlspecialchars($b['quantite']); ?></option>
-						<?php endforeach; endif; ?>
+			<div>
+				<select name="id_produit" id="id_produit" required>
+					<option value="">-- choisir un produit --</option>
+					<?php
+					foreach ($produit as $p): ?>
+						<option value="<?php echo (int) $p['id_produit']; ?>">
+							<?php echo htmlspecialchars($p['nom_produit']); ?></option>
+					<?php endforeach; ?>
 				</select>
 			</div>
 
-			<div class="form-group">
-				<label for="quantite">Quantité à attribuer</label>
-				<input type="number" name="quantite" id="quantite" min="1" required>
-			</div>
+			<form method="post" action="<?= $base_url ?>/dispatch/create">
+				<div class="form-group">
+					<label for="id_besoin">Sélectionner un besoin</label>
+					<select name="id_besoin" id="id_besoin" required>
+						<option value="">-- choisir --</option>
+						<?php if (!empty($besoin) && is_array($besoin)):
+							foreach ($besoin as $b): ?>
+								<option value="<?php echo (int) $b['id_besoin']; ?>">ID <?php echo (int) $b['id_besoin']; ?> -
+									Ville
+									<?php echo htmlspecialchars($b['id_ville']); ?> - Produit
+									<?php echo htmlspecialchars($b['id_produit']); ?> - Qté demandée:
+									<?php echo htmlspecialchars($b['quantite']); ?>
+								</option>
+							<?php endforeach; endif; ?>
+					</select>
+				</div>
 
-			<div>
-				<button type="submit" class="btn-submit">⚡ Créer dispatch</button>
-			</div>
-		</form>
+				<div class="form-group">
+					<label for="quantite">Quantité à attribuer</label>
+					<input type="number" name="quantite" id="quantite" min="1" required>
+				</div>
 
-		<a class="back-link" href="<?= $base_url ?>/">← Retour au tableau de bord</a>
-	</div>
+				<div>
+					<button type="submit" class="btn-submit">⚡ Créer dispatch</button>
+				</div>
+			</form>
+
+			<a class="back-link" href="<?= $base_url ?>/">← Retour au tableau de bord</a>
+		</div>
 	</main>
+
+		<!-- Remaining total display -->
+		<div style="width:100%;max-width:650px;margin:12px auto;text-align:center;">
+			<div id="remaining-info" style="background:#fff;border-radius:10px;padding:12px;border:1px solid #e6e6e6;max-width:650px;margin:0 auto;color:#0f172a;">Besoin restant: —</div>
+		</div>
 
 	<?php Flight::render('partial/footer.php'); ?>
 </body>
+
+<script>
+	var select = document.getElementById("id_produit");
+	select.addEventListener("change", function() {
+		var id_produit = this.value;
+		if (id_produit) {
+			ajax({id_produit: id_produit}, "<?= $base_url ?>/dispatch/getInfoByProduit")
+				.then(data => {
+					// update total remaining display
+					var remainingInfo = document.getElementById('remaining-info');
+					var totalRestant = 0;
+					if (data && Array.isArray(data.sumBesoinRestant)) {
+						totalRestant = data.sumBesoinRestant.reduce(function(acc, cur) {
+							return acc + (parseInt(cur.total_restant) || 0);
+						}, 0);
+					}
+					remainingInfo.textContent = 'Total restant: ' + totalRestant;
+
+					var selectBesoin = document.getElementById("id_besoin");
+					selectBesoin.innerHTML = '<option value="">-- choisir --</option>';
+					data.ville.forEach(ville => {
+						data.sumBesoin.forEach(besoin => {
+							if (parseInt(besoin.id_ville) === parseInt(ville.id_ville)) {
+								var option = document.createElement("option");
+								option.value = ville.id_ville;
+								var restantObj = (data.sumBesoinRestant || []).find(r => parseInt(r.id_ville) === parseInt(ville.id_ville));
+								var restant = restantObj ? (restantObj.total_restant || 0) : 0;
+								option.textContent = "Ville " + (ville.nom_ville || ville.nom) + " - Besoin total: " + besoin.total_besoin + " - Restant: " + restant;
+								selectBesoin.appendChild(option);
+							}
+						});
+					});
+				})
+				.catch(error => console.error("Erreur:", error));
+		}
+	});
+
+	function ajax(data, lien) {
+		return fetch(lien, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
+			.then(res => { if (!res.ok) throw new Error("Erreur réseau"); return res.json(); });
+	}
+</script>
 
 </html>
