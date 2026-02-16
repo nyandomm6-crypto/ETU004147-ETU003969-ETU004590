@@ -1,0 +1,28 @@
+View
+
+AUTENTIFICATION
+    -login
+    -inscription
+
+PAGE ADMIN
+    PARTIE 1
+    -acueilAdmin:
+        -formCategorie
+        -listCategorie
+        
+    PARTIE 2
+        -listUser
+        -nombreEchange
+    
+PAGE USER   
+    PARTIE 1
+    -accueilUser
+        -formObjet
+        -listObjetMine : par categorie
+        -listObjetOther : par categorie
+            -objet : bouton echanger ->dropdown objetMine
+        -listDemande : bouton accepter et refuser
+    
+    PARTIE 2
+
+
