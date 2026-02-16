@@ -36,7 +36,7 @@ class DispatchController
     public function showDispatchDetail($id_dispatch)
     {
         $dispatch = $this->dispatchModel->getDispatchDetail($id_dispatch);
-        $this->app->render('showDispatchDetail.php', [
+        $this->app->render('showDispatchDetail', [
             'base_url' => Flight::get('base_url'),
             'dispatch' => $dispatch
         ]);
@@ -45,6 +45,8 @@ class DispatchController
     public function showFormDispatch()
     {
         $this->app->render('formDispatch', [
+            'error' => null,
+            'succes' => null,
             'base_url' => Flight::get('base_url'),
             'besoin' => $this->besoinModel->getAllBesoin()
         ]);
@@ -58,12 +60,7 @@ class DispatchController
         $quantite = $data['quantite'];
         $result = $this->dispatchModel->dispatchDon($id_besoin, $quantite);
 
-        // Render the form with the result message so errors are visible
-        $this->app->render('formDispatch', [
-            'base_url' => Flight::get('base_url'),
-            'besoin' => $this->besoinModel->getAllBesoin(),
-            'message' => $result['message'] ?? null,
-            'success' => $result['success'] ?? false
-        ]);
+        $this->app->redirect('/dashboard');
+        
     }
 }
