@@ -33,7 +33,7 @@ class VilleController
 
 
         $this->app->render('dashboard.php', [
-            'base_url' => Flight::get('base_url'),
+            'base_url' => Flight::get('flight.base_url'),
             'villes' => $villes,
             'dons' => $dons
         ]);
