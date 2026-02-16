@@ -141,13 +141,13 @@
     <div class="card">
         <div class="card-toolbar">
             <span class="count"><strong><?= count($dons ?? []) ?></strong> don(s) enregistré(s)</span>
-            <a href="<?= $base_url ?>/formDon" class="btn-add">+ Nouveau don</a>
+            <a href="<?= $base_url ?>/showFormDon" class="btn-add">+ Nouveau don</a>
         </div>
 
         <?php if (!empty($dons)): ?>
         <table>
             <thead>
-                <tr>
+              1  <tr>
                     <th>Produit</th>
                     <th>Quantité</th>
                     <th>Date de saisie</th>

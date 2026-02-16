@@ -75,7 +75,8 @@ Version 2
     -DonModel
         -getAllDonArgent
         -getAllDonAutre
-        -
+    
+        
 
 -Besoin
     -BesoinModel

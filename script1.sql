@@ -41,3 +41,49 @@ CREATE TABLE dispatch (
     quantite_attribuee INT NOT NULL,
     date_dispatch DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+
+by categrorie
+
+SELECT 
+    c.nom_categorie,
+    p.id_produit,
+    p.nom_produit,
+    p.prix_unitaire
+FROM produit p
+JOIN categorie c ON p.id_categorie = c.id_categorie
+WHERE p.nom_produit != 'Argent'
+ORDER BY c.nom_categorie, p.nom_produit;
+
+
+// tout les dons Argent
+SELECT 
+    d.id_don,
+    d.quantite,
+    d.date_don,
+    v.nom_ville
+FROM don d
+JOIN produit p ON d.id_produit = p.id_produit
+JOIN ville v ON d.id_ville = v.id_ville
+WHERE p.nom_produit = 'Argent'
+ORDER BY d.date_don DESC;
+
+// tout les dons produits
+SELECT 
+    d.id_don,
+    d.quantite, 
+    d.date_don,
+    v.nom_ville
+FROM don d
+JOIN produit p ON d.id_produit = p.id_produit
+JOIN ville v ON d.id_ville = v.id_ville
+WHERE p.nom_produit != 'Argent'
+ORDER BY d.date_don DESC;
+
+//total dons Argent
+SELECT 
+    SUM(d.quantite) AS total_dons_argent
+FROM don d
+JOIN produit p ON d.id_produit = p.id_produit
+WHERE p.nom_produit = 'Argent';
+

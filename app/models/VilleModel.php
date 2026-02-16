@@ -75,8 +75,9 @@ class VilleModel
     }
 
 
-    public function getRestant_besoin_parVille()
+    public function getResteBesoinParProduitParVille(): array
     {
+<<<<<<< Updated upstream
         $produits = $this->produitModel->getAllProduits();
         $result = [];
 
@@ -105,9 +106,24 @@ class VilleModel
         }
 
         return $result;
+=======
+        $sql = "SELECT v.id_ville, v.nom_ville,
+                       p.id_produit, p.nom_produit,
+                       SUM(b.quantite) AS total_besoin,
+                       COALESCE(SUM(d.quantite_attribuee), 0) AS total_attribue,
+                       (SUM(b.quantite) - COALESCE(SUM(d.quantite_attribuee), 0)) AS reste
+                FROM besoin b
+                JOIN ville v ON b.id_ville = v.id_ville
+                JOIN produit p ON b.id_produit = p.id_produit
+                LEFT JOIN dispatch d ON b.id_besoin = d.id_besoin
+                GROUP BY v.id_ville, v.nom_ville, p.id_produit, p.nom_produit
+                HAVING reste > 0
+                ORDER BY v.nom_ville, p.nom_produit";
+
+        $stmt = $this->db->query($sql);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+>>>>>>> Stashed changes
     }
-
-
 
 
 }

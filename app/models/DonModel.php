@@ -27,6 +27,21 @@ class DonModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getAllDonArgent()
+    {
+        $stmt = $this->db->prepare("SELECT sum(quantite) as total FROM don
+        join produit on don.id_produit = produit.id_produit
+        join categorie on produit.id_categorie = categorie.id_categorie
+        where categorie.nom_categorie = 'Financier'");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    
+
+  
+
+    
 
     
 }
