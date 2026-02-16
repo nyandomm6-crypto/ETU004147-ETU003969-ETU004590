@@ -1,6 +1,6 @@
 <?php
 
-use app\controllers\UserController;
+use app\controllers\BesoinController;
 
 
 
@@ -12,15 +12,17 @@ use flight\net\Router;
  * @var Engine $app
  */
 
-$userController = new UserController($app);
+$BesoinController = new BesoinController($app);
 
 
 
 
-// // Authentification
-// $router->get('/login', [$userController, 'afficherLogin']);
 
-// $router->post('/validateName', [$userController, 'validateName']);
+$router->get('/formBesoin', [$BesoinController, 'showFormBesoin']);
+
+$router->get('/besoin', [$BesoinController, 'showBesoin']);
+
+$router->post('/formulaireBesoin', [$BesoinController, 'createBesoinController']);
 
 
 
