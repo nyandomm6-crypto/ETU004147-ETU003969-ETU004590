@@ -2,16 +2,21 @@
 
 namespace app\models;
 
+
 use Flight;
 use PDO;
+use app\models\ProduitModel;
+
 
 class VilleModel
 {
     private PDO $db;
+    private ProduitModel $produitModel;
 
     public function __construct()
     {
         $this->db = Flight::db();
+        $this->produitModel = new ProduitModel();
     }
 
 
@@ -55,11 +60,11 @@ class VilleModel
         $sumBesoinRestant = [];
         $attribueByVille = [];
         foreach ($sumAttribue as $a) {
-            $attribueByVille[(int)$a['id_ville']] = (int)$a['total_attribue'];
+            $attribueByVille[(int) $a['id_ville']] = (int) $a['total_attribue'];
         }
         foreach ($sumBesoin as $b) {
-            $vid = (int)$b['id_ville'];
-            $totalBesoin = (int)$b['total_besoin'];
+            $vid = (int) $b['id_ville'];
+            $totalBesoin = (int) $b['total_besoin'];
             $totalAttribue = $attribueByVille[$vid] ?? 0;
             $sumBesoinRestant[] = [
                 'id_ville' => $vid,
@@ -68,5 +73,41 @@ class VilleModel
         }
         return ['ville' => $ville, 'sumBesoin' => $sumBesoin, 'sumBesoinRestant' => $sumBesoinRestant];
     }
+
+
+    public function getRestant_besoin_parVille()
+    {
+        $produits = $this->produitModel->getAllProduits();
+        $result = [];
+
+        foreach ($produits as $pr) {
+            $id_produit = (int)$pr['id_produit'];
+            $data = $this->getVillebyIdProduit($id_produit);
+            $villes = $data['ville'] ?? [];
+            $sommeRestant = $data['sumBesoinRestant'] ?? [];
+
+            // index restant by id_ville for quick lookup
+            $restantByVille = [];
+            foreach ($sommeRestant as $r) {
+                $restantByVille[(int)$r['id_ville']] = (int)$r['total_restant'];
+            }
+
+            foreach ($villes as $v) {
+                $vid = (int)$v['id_ville'];
+                $result[] = [
+                    'id_produit' => $id_produit,
+                    'nom_produit' => $pr['nom_produit'] ?? null,
+                    'id_ville' => $vid,
+                    'nom_ville' => $v['nom_ville'] ?? ($v['nom'] ?? null),
+                    'total_restant' => $restantByVille[$vid] ?? 0
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+
+
 
 }
