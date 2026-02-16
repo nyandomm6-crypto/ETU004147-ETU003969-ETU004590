@@ -31,7 +31,8 @@ class DispatchModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getDispatchDetail($id_dispatch){
+    public function getDispatchDetail($id_dispatch)
+    {
         $stmt = $this->db->prepare("
         SELECT *
         FROM dispatch d
@@ -47,7 +48,7 @@ class DispatchModel
     }
 
 
-      public function dispatchDon($idBesoin, $quantiteDemandee)
+    public function dispatchDon($idBesoin, $quantiteDemandee)
     {
         try {
             $this->db->beginTransaction();
@@ -144,6 +145,40 @@ class DispatchModel
                 "message" => $e->getMessage()
             ];
         }
+    }
+
+    /**
+     * Retourne un résumé des dispatchs par ville: total besoins, total attribué, restant
+     * @return array<int,array{ id_ville:int, nom_ville:string, total_besoin:int, total_attribue:int, besoin_restant:int }>
+     */
+    public function getDispatchSummaryByVille(): array
+    {
+        $sql = "SELECT v.id_ville, v.nom_ville,
+                       COALESCE(SUM(b.quantite),0) AS total_besoin,
+                       COALESCE(SUM(d.quantite_attribuee),0) AS total_attribue
+                FROM ville v
+                LEFT JOIN besoin b ON v.id_ville = b.id_ville
+                LEFT JOIN dispatch d ON b.id_besoin = d.id_besoin
+                GROUP BY v.id_ville, v.nom_ville
+                ORDER BY v.nom_ville ASC";
+
+        $stmt = $this->db->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $result = [];
+        foreach ($rows as $r) {
+            $totalBesoin = (int)($r['total_besoin'] ?? 0);
+            $totalAttribue = (int)($r['total_attribue'] ?? 0);
+            $result[] = [
+                'id_ville' => (int)$r['id_ville'],
+                'nom_ville' => $r['nom_ville'],
+                'total_besoin' => $totalBesoin,
+                'total_attribue' => $totalAttribue,
+                'besoin_restant' => max(0, $totalBesoin - $totalAttribue)
+            ];
+        }
+
+        return $result;
     }
 
 

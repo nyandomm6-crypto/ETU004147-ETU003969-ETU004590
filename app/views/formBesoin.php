@@ -98,6 +98,7 @@
 </head>
 
 <body>
+    
     <div class="card">
         <div class="card-header">
             <span class="badge">BNGRC</span>
@@ -146,6 +147,9 @@
         <a href="<?= $base_url ?>/dashboard" class="back-link">← Retour au tableau de bord</a>
 
     </div>
+      <?php
+    Flight::render('partial/footer.php');
+    ?>
 </body>
 
 </html>

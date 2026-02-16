@@ -130,6 +130,7 @@
     </style>
 </head>
 <body>
+    
 
 <div class="container">
     <div class="page-header">
@@ -175,6 +176,9 @@
         <?php endif; ?>
     </div>
 </div>
+  <?php
+    Flight::render('partial/footer.php');
+    ?>
 
 </body>
 </html>

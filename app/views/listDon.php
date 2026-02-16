@@ -175,6 +175,9 @@
         <?php endif; ?>
     </div>
 </div>
+  <?php
+    Flight::render('partial/footer.php');
+    ?>
 
 </body>
 </html>

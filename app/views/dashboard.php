@@ -150,6 +150,8 @@
 		</nav>
 	</div>
 
+		<div class="section-title"><h2>Dons</h2><span class="line"></span></div>
+		<div class="card">
 	<div class="container">
 
 		<!-- ── Villes & besoins ────────────────── -->
@@ -219,6 +221,33 @@
 			<div class="card"><p class="empty">Aucune ville disponible. Veuillez saisir des villes et besoins.</p></div>
 		<?php endif; ?>
 
+		<?php if (!empty($dispatch_summary) && is_array($dispatch_summary)): ?>
+		<section>
+			<h2>Résumé des dispatchs par ville</h2>
+			<table border="1" cellpadding="6" cellspacing="0">
+				<thead>
+					<tr>
+						<th>Ville</th>
+						<th>Total besoins</th>
+						<th>Total attribué</th>
+						<th>Besoins restants</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($dispatch_summary as $s): ?>
+						<tr>
+							<td><?php echo htmlspecialchars($s['nom_ville'] ?? ''); ?></td>
+							<td><?php echo htmlspecialchars($s['total_besoin'] ?? 0); ?></td>
+							<td><?php echo htmlspecialchars($s['total_attribue'] ?? 0); ?></td>
+							<td><?php echo htmlspecialchars($s['besoin_restant'] ?? 0); ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+		</section>
+		<?php endif; ?>
+
+		<?php if (!empty($dispatches) && is_array($dispatches)): ?>
 		<!-- ── Dons (liste brute) ─────────────── -->
 		<div class="section-title"><h2>Dons</h2><span class="line"></span></div>
 		<div class="card">
@@ -278,8 +307,12 @@
 			</table>
 		</div>
 		<?php endif; ?>
+        <?php endif; ?>
 
 	</div>
+    <?php
+    Flight::render('partial/footer.php');
+    ?>
 
 </body>
 </html>
