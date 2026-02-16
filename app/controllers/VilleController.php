@@ -39,7 +39,8 @@ class VilleController
             'base_url' => Flight::get('flight.base_url'),
             'villes' => $villes,
             'dons' => $dons,
-            'dispatch_summary' => $dispatchSummary
+            'dispatch_summary' => $dispatchSummary,
+            
         ]);
     }
 
