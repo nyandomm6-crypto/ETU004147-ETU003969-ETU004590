@@ -143,6 +143,8 @@
             </div>
 
         </form>
+        <a href="<?= $base_url ?>/dashboard" class="back-link">← Retour au tableau de bord</a>
+
     </div>
 </body>
 

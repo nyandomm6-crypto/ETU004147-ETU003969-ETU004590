@@ -94,6 +94,15 @@
             box-shadow: 0 4px 14px rgba(26,86,219,0.35);
         }
         .btn-submit:active { transform: translateY(0); }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            font-size: 13px;
+            color: #64748b;
+            text-decoration: none;
+        }
+        .back-link:hover { color: #1a56db; }
     </style>
 </head>
 
@@ -139,7 +148,7 @@
             </div>
 
             <div>
-                <button type="submit" class="btn-submit">🎁 Enregistrer le don</button>
+                <button type="submit" class="btn-submit">Enregistrer le don</button>
             </div>
         </form>
 
