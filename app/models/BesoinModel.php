@@ -34,9 +34,7 @@ class BesoinModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Retourne les besoins pour une ville donnée avec les informations produit
-     */
+
     public function getBesoinsByVille(int $id_ville): array
     {
         $sql = "SELECT b.*, p.nom_produit, p.prix_unitaire, v.nom_ville
@@ -51,10 +49,7 @@ class BesoinModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Retourne toutes les villes avec leurs besoins (même vides)
-     * Format: array of ['id_ville','nom_ville','besoins' => []]
-     */
+
     public function getVillesWithBesoins(): array
     {
         $sql = "SELECT v.id_ville, v.nom_ville,
