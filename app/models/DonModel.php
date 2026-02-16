@@ -17,7 +17,7 @@ class DonModel
 
     public function createDon($data)
     {
-        $stmt = $this->db->prepare("INSERT INTO don (id_produit, id_ville, quantite,quantite_Initial) VALUES (?, ?, ?)");
+        $stmt = $this->db->prepare("INSERT INTO don (id_produit, id_ville, quantite,quantite_Initial) VALUES (?, ?, ?,?)");
         return $stmt->execute([$data['id_produit'], $data['id_ville'], $data['quantite'], $data['quantite']]);
     }
 
