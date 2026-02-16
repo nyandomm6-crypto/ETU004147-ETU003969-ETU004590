@@ -36,16 +36,16 @@ class DonController
         ]);
     }
 
-        public function createDon(array $data)
+    public function createDon()
     {
+        $data = Flight::request()->data->getData();
+
         $donnee = [
             'id_ville' => $data['id_ville'],
             'id_produit' => $data['id_produit'],
             'quantite' => $data['quantite']
         ];
-
-        $ok = $this->objet->createBesoin($donnee);
-
+        $this->donModel->createDon($donnee);
     }
 
 
