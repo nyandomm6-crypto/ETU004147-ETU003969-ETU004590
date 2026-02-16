@@ -22,3 +22,15 @@
     
     -View
         -formBesoin.php
+
+-Produit
+        -ProduitModel
+           -getAllProduit
+           -getProduitById
+    
+
+-Ville 
+    -VilleModel
+        -getAllVille
+        -getVilleById
+
