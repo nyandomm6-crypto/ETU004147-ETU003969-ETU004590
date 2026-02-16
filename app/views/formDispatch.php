@@ -1,51 +1,165 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 
 <head>
 	<meta charset="utf-8">
-	<title>Simuler dispatch</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simuler dispatch — BNGRC</title>
+	<style>
+		* { margin: 0; padding: 0; box-sizing: border-box; }
+		body {
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			background: linear-gradient(135deg, #e8f0fe 0%, #f5f7fa 100%);
+			min-height: 100vh;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+		}
+		.card {
+			background: #fff;
+			border-radius: 16px;
+			box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+			padding: 40px 36px 32px;
+			width: 100%;
+			max-width: 650px;
+		}
+		.card-header {
+			text-align: center;
+			margin-bottom: 22px;
+		}
+		.card-header .badge {
+			display: inline-block;
+			background: #1a56db;
+			color: #fff;
+			font-size: 11px;
+			font-weight: 700;
+			letter-spacing: 1.5px;
+			text-transform: uppercase;
+			padding: 4px 14px;
+			border-radius: 20px;
+			margin-bottom: 10px;
+		}
+		.card-header h1 {
+			font-size: 22px;
+			color: #1e293b;
+			font-weight: 700;
+		}
+		.card-header p {
+			color: #64748b;
+			font-size: 13px;
+			margin-top: 4px;
+		}
+		.form-group {
+			margin-bottom: 18px;
+		}
+		.form-group label {
+			display: block;
+			font-size: 13px;
+			font-weight: 600;
+			color: #334155;
+			margin-bottom: 6px;
+		}
+		.form-group select,
+		.form-group input {
+			width: 100%;
+			padding: 10px 14px;
+			border: 1.5px solid #cbd5e1;
+			border-radius: 10px;
+			font-size: 14px;
+			color: #1e293b;
+			background: #f8fafc;
+			transition: border-color .2s, box-shadow .2s;
+			outline: none;
+		}
+		.form-group select:focus,
+		.form-group input:focus {
+			border-color: #1a56db;
+			box-shadow: 0 0 0 3px rgba(26,86,219,0.12);
+			background: #fff;
+		}
+		.btn-submit {
+			width: 100%;
+			padding: 12px;
+			background: linear-gradient(135deg, #1a56db, #2563eb);
+			color: #fff;
+			border: none;
+			border-radius: 10px;
+			font-size: 15px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: transform .15s, box-shadow .2s;
+			margin-top: 6px;
+		}
+		.btn-submit:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 4px 14px rgba(26,86,219,0.35);
+		}
+		.btn-submit:active { transform: translateY(0); }
+		.alert {
+			border-radius: 12px;
+			padding: 12px 14px;
+			margin: 14px 0 18px;
+			font-size: 13px;
+			border: 1px solid;
+		}
+		.alert-success { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+		.alert-error { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
+		.back-link {
+			display: block;
+			text-align: center;
+			margin-top: 16px;
+			font-size: 13px;
+			color: #64748b;
+			text-decoration: none;
+		}
+		.back-link:hover { color: #1a56db; }
+	</style>
 </head>
 
 <body>
-	<h1>Simulation / Insertion de dispatch</h1>
-	<p><a href="<?= $base_url ?>dashboard">Retour au tableau de bord</a></p>
+	<div class="card">
+		<div class="card-header">
+			<span class="badge">BNGRC</span>
+			<h1>Simulation / Insertion de dispatch</h1>
+			<p>Choisissez un besoin et attribuez une quantité</p>
+		</div>
 
-	<?php if (isset($message)): ?>
-		<div>
+		<?php if (isset($message)): ?>
 			<?php if (!empty($success)): ?>
-				<p style="color:green"><?php echo htmlspecialchars($message); ?></p>
+				<div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div>
 			<?php else: ?>
-				<p style="color:red"><?php echo htmlspecialchars($message); ?></p>
+				<div class="alert alert-error"><?php echo htmlspecialchars($message); ?></div>
 			<?php endif; ?>
-		</div>
-	<?php endif; ?>
+		<?php endif; ?>
 
-	<form method="post" action="<?= $base_url ?>dispatch/create">
-		<div>
-			<label for="id_besoin">Sélectionner un besoin</label>
-			<select name="id_besoin" id="id_besoin" required>
-				<option value="">-- choisir --</option>
-				<?php if (!empty($besoin) && is_array($besoin)):
-					foreach ($besoin as $b): ?>
-						<option value="<?php echo (int) $b['id_besoin']; ?>">ID <?php echo (int) $b['id_besoin']; ?> - Ville
-							<?php echo htmlspecialchars($b['id_ville']); ?> - Produit
-							<?php echo htmlspecialchars($b['id_produit']); ?> - Qté demandée:
-							<?php echo htmlspecialchars($b['quantite']); ?></option>
-					<?php endforeach; endif; ?>
-			</select>
-		</div>
+		<form method="post" action="<?= $base_url ?>/dispatch/create">
+			<div class="form-group">
+				<label for="id_besoin">Sélectionner un besoin</label>
+				<select name="id_besoin" id="id_besoin" required>
+					<option value="">-- choisir --</option>
+					<?php if (!empty($besoin) && is_array($besoin)):
+						foreach ($besoin as $b): ?>
+							<option value="<?php echo (int) $b['id_besoin']; ?>">ID <?php echo (int) $b['id_besoin']; ?> - Ville
+								<?php echo htmlspecialchars($b['id_ville']); ?> - Produit
+								<?php echo htmlspecialchars($b['id_produit']); ?> - Qté demandée:
+								<?php echo htmlspecialchars($b['quantite']); ?></option>
+						<?php endforeach; endif; ?>
+				</select>
+			</div>
 
-		<div>
-			<label for="quantite">Quantité à attribuer</label>
-			<input type="number" name="quantite" id="quantite" min="1" required>
-		</div>
+			<div class="form-group">
+				<label for="quantite">Quantité à attribuer</label>
+				<input type="number" name="quantite" id="quantite" min="1" required>
+			</div>
 
-		<div>
-			<button type="submit">Créer dispatch</button>
-		</div>
-	</form>
+			<div>
+				<button type="submit" class="btn-submit">⚡ Créer dispatch</button>
+			</div>
+		</form>
 
-
+		<a class="back-link" href="<?= $base_url ?>/dashboard">← Retour au tableau de bord</a>
+	</div>
 </body>
 
 </html>
