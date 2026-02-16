@@ -17,7 +17,7 @@
 </head>
 
 <body>
-    <form action="/createDon" method="post">
+    <form action="<?= $base_url ?>/createDon" method="post">
 
         <div>
             <label for="id_ville">Ville</label>
