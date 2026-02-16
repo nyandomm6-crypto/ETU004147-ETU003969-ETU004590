@@ -42,25 +42,24 @@ class BesoinController
 
         $ok = $this->besoinModel->createBesoin($donnee);
 
-         $this->app->render('listeBesoin.php', [
-            'base_url' => Flight::get('flight.base_url'),
-            'villes' => $this->villeModel->getAllVille(),
-            'produits' => $this->produitModel->getAllProduits()
-        ]);
+        $this->showListBesoin();
+
         
        
 
     }
-    public function showListBesoin(): array
-    {
-        return $this->besoinModel->getAllBesoin();
-         $this->app->render('listeBesoin.php', [
-            'base_url' => Flight::get('flight.base_url'),
-            'besoins' => $this->besoinModel->getAllBesoin(),
-            'villes' => $this->villeModel->getAllVille(),
-            'produits' => $this->produitModel->getAllProduits()
-        ]);
-    }   
+    public function showListBesoin()
+{
+    $besoins = $this->besoinModel->getAllBesoin();
+
+    $this->app->render('listeBesoin.php', [
+        'base_url' => Flight::get('flight.base_url'),
+        'besoins' => $besoins,
+        'villes' => $this->villeModel->getAllVille(),
+        'produits' => $this->produitModel->getAllProduits()
+    ]);
+}
+ 
     public function showFormBesoin()
     {
         $this->app->render('formBesoin.php', [
