@@ -77,31 +77,32 @@ class VilleModel
 
     public function getRestant_besoin_parVille()
     {
-        $produits = $this->produitModel->getAllProduits();
+        // Directly compute per-city per-product remaining: SUM(b.quantite) - SUM(d.quantite_attribuee)
+        $sql = "SELECT b.id_ville, v.nom_ville, b.id_produit, p.nom_produit,
+                       SUM(b.quantite) AS total_besoin,
+                       COALESCE(SUM(d.quantite_attribuee),0) AS total_attribue
+                FROM besoin b
+                LEFT JOIN dispatch d ON b.id_besoin = d.id_besoin
+                LEFT JOIN ville v ON b.id_ville = v.id_ville
+                LEFT JOIN produit p ON b.id_produit = p.id_produit
+                GROUP BY b.id_ville, v.nom_ville, b.id_produit, p.nom_produit";
+
+        $stmt = $this->db->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         $result = [];
-
-        foreach ($produits as $pr) {
-            $id_produit = (int)$pr['id_produit'];
-            $data = $this->getVillebyIdProduit($id_produit);
-            $villes = $data['ville'] ?? [];
-            $sommeRestant = $data['sumBesoinRestant'] ?? [];
-
-            // index restant by id_ville for quick lookup
-            $restantByVille = [];
-            foreach ($sommeRestant as $r) {
-                $restantByVille[(int)$r['id_ville']] = (int)$r['total_restant'];
-            }
-
-            foreach ($villes as $v) {
-                $vid = (int)$v['id_ville'];
-                $result[] = [
-                    'id_produit' => $id_produit,
-                    'nom_produit' => $pr['nom_produit'] ?? null,
-                    'id_ville' => $vid,
-                    'nom_ville' => $v['nom_ville'] ?? ($v['nom'] ?? null),
-                    'total_restant' => $restantByVille[$vid] ?? 0
-                ];
-            }
+        foreach ($rows as $r) {
+            $totalBesoin = (int)($r['total_besoin'] ?? 0);
+            $totalAttribue = (int)($r['total_attribue'] ?? 0);
+            $result[] = [
+                'id_ville' => (int)$r['id_ville'],
+                'nom_ville' => $r['nom_ville'] ?? null,
+                'id_produit' => (int)$r['id_produit'],
+                'nom_produit' => $r['nom_produit'] ?? null,
+                'total_besoin' => $totalBesoin,
+                'total_attribue' => $totalAttribue,
+                'total_restant' => max(0, $totalBesoin - $totalAttribue)
+            ];
         }
 
         return $result;
