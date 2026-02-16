@@ -17,6 +17,7 @@ class BesoinController
         $this->besoinModel = new BesoinModel();
     }
 
+<<<<<<< Updated upstream
     public function createBesoinController()
     {
         $request = Flight::request();
@@ -32,6 +33,18 @@ class BesoinController
         $this->besoinModel->createBesoin($donnee);
 
         $this->app->redirect($base_url . '/besoin');
+=======
+    public function createDon(array $data)
+    {
+        $donnee = [
+            'id_ville' => $data['id_ville'],
+            'id_produit' => $data['id_produit'],
+            'quantite' => $data['quantite']
+        ];
+
+        $ok = $this->objet->createBesoin($donnee);
+
+>>>>>>> Stashed changes
     }
 
     public function showBesoin()
