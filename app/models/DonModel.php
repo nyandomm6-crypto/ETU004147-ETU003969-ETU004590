@@ -37,7 +37,24 @@ class DonModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+ public function getResteDonMateriel($id_produit)
+{
+    $stmt = $this->db->prepare("
+        SELECT SUM(quantite) as total 
+        FROM don
+        JOIN produit ON don.id_produit = produit.id_produit
+        JOIN categorie ON produit.id_categorie = categorie.id_categorie
+        WHERE categorie.nom_categorie != 'Financier' 
+        AND don.id_produit = ?
+    ");
+    $stmt->execute([$id_produit]);
+
+    $total = $stmt->fetchColumn();
     
+    return (int) $total;
+}
+
 
   
 
