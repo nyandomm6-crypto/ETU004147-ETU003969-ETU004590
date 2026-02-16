@@ -10,7 +10,7 @@
 
         -inserer donnee de test (Miantra)
     
--DASHBOARD
+-DASHBOARD(Ando)
     -view : liste des villes
         -nom 
         -besoin
@@ -21,21 +21,41 @@
         -createBesoin
 
     -BesoinController
-        -appel BesoinModel
+        -createBesoin
+        -showFormBesoin : afficher le formulaire
     
     -View
         -formBesoin.php
 
 -Produit(Miantra)
-        -ProduitModel
-           -getAllProduit
-           -getProduitById
+    -ProduitModel
+        -getAllProduit
+        -getProduitById
     
 
 -Ville (Ando)
     -VilleModel
         -getAllVille
         -getVilleById
+
+-Don(Miantra)
+    -DonModel
+        -createDon
+    
+    -DonController
+        -createDon
+        -showFormDon : afficher formulaire de don
+
+    -view
+        -formDon.php 
+
+-Dispatch
+    -DispatchModel
+
+    -DispatchController
+
+    -View
+        
 
 
 
