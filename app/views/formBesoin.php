@@ -6,7 +6,7 @@
         <title>Document</title>
     </head>
     <body>
-        <form action="/Besoin" method="post">
+    <form action="<?= $base_url ?>/formulaireBesoin" method="post">
             <label for="id_ville">Ville:</label>
             <input type="text" id="id_ville" name="id_ville" required><br>
 
