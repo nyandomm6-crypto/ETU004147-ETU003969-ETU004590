@@ -254,10 +254,7 @@
 
 <body>
 	<?php Flight::render('partial/header.php'); ?>
-<<<<<<< HEAD
-=======
 
->>>>>>> 022281912f6519df808966c8df39eaf9fbf95645
 
 	<main class="page">
 		<div class="card">
@@ -275,25 +272,10 @@
 				<?php endif; ?>
 			<?php endif; ?>
 
-<<<<<<< HEAD
 			<form method="post" action="<?= $base_url ?>/dispatch/create" id="dispatch-form">
 				
 				<!-- Sélection du produit -->
-=======
-			<div>
-				<select name="id_produit" id="id_produit" required>
-					<option value="">-- choisir un produit --</option>
-					<?php
-					foreach ($produit as $p): ?>
-						<option value="<?php echo (int) $p['id_produit']; ?>">
-							<?php echo htmlspecialchars($p['nom_produit']); ?>
-						</option>
-					<?php endforeach; ?>
-				</select>
-			</div>
 
-			<form method="post" action="<?= $base_url ?>/dispatch/create">
->>>>>>> 022281912f6519df808966c8df39eaf9fbf95645
 				<div class="form-group">
 					<label for="id_produit">1. Sélectionner un produit</label>
 					<select name="id_produit" id="id_produit" required>
@@ -312,13 +294,7 @@
 					<span class="value" id="don-restant-value">0</span>
 				</div>
 				
-				<input type="radio" name="categorie" value="vivres"> Par date de saisie <br>
-				<input type="radio" name="categorie" value="materiaux"> Par demande le plus petit <br>
-				<input type="radio" name="categorie" value="financier"> Par proportionnalite <br>
-
-
-
-
+			
 				<!-- Info besoin total restant -->
 				<div class="info-box warning" id="besoin-info" style="display: none;">
 					<span class="label">📦 Besoin total restant</span>
@@ -383,16 +359,6 @@
 		</div>
 	</main>
 
-<<<<<<< HEAD
-=======
-	<!-- Remaining total display -->
-	<div style="width:100%;max-width:650px;margin:12px auto;text-align:center;">
-		<div id="remaining-info"
-			style="background:#fff;border-radius:10px;padding:12px;border:1px solid #e6e6e6;max-width:650px;margin:0 auto;color:#0f172a;">
-			Besoin restant: —</div>
-	</div>
-
->>>>>>> 022281912f6519df808966c8df39eaf9fbf95645
 	<?php Flight::render('partial/footer.php'); ?>
 
 	<script>
@@ -474,47 +440,4 @@
 	</script>
 </body>
 
-<<<<<<< HEAD
-=======
-<script>
-	var select = document.getElementById("id_produit");
-	select.addEventListener("change", function () {
-		var id_produit = this.value;
-		var selectBesoin = document.getElementById("id_besoin");
-		var remainingInfo = document.getElementById('remaining-info');
-
-		if (!id_produit) {
-			selectBesoin.innerHTML = '<option value="">-- choisir --</option>';
-			remainingInfo.textContent = 'Besoin restant: —';
-			return;
-		}
-
-		ajax({ id_produit: id_produit }, "<?= $base_url ?>/dispatch/getInfoByProduit")
-			.then(data => {
-				// Afficher total restant
-				remainingInfo.textContent = 'Total restant: ' + (data.totalRestant || 0);
-
-				// Remplir le dropdown avec les vrais id_besoin
-				selectBesoin.innerHTML = '<option value="">-- choisir --</option>';
-				if (data.besoins && data.besoins.length > 0) {
-					data.besoins.forEach(function (b) {
-						var option = document.createElement("option");
-						option.value = b.id_besoin;
-						option.textContent = b.nom_ville + " — Besoin: " + b.quantite_besoin + " — Reste: " + b.reste;
-						selectBesoin.appendChild(option);
-					});
-				} else {
-					selectBesoin.innerHTML = '<option value="">Aucun besoin restant</option>';
-				}
-			})
-			.catch(error => console.error("Erreur:", error));
-	});
-
-	function ajax(data, lien) {
-		return fetch(lien, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) })
-			.then(res => { if (!res.ok) throw new Error("Erreur réseau"); return res.json(); });
-	}
-</script>
-
->>>>>>> 022281912f6519df808966c8df39eaf9fbf95645
 </html>
