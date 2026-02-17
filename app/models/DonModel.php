@@ -56,13 +56,9 @@ class DonModel
 }
 
 
-    /**
-     * Retire un montant du don argent en insérant un don négatif.
-     * Le produit "Argent" est trouvé via la catégorie "Financier".
-     */
+  
     public function retirerArgent($montant)
     {
-        // Trouver l'id_produit du produit financier (Argent)
         $stmt = $this->db->prepare("
             SELECT p.id_produit FROM produit p
             JOIN categorie c ON p.id_categorie = c.id_categorie

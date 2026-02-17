@@ -125,23 +125,15 @@ class VilleModel
     }
 
 
-    /**
-     * Récapitulatif en montant (Ar) :
-     * - montant_besoin_total : SUM(besoin.quantite * prix_unitaire) pour tous les besoins
-     * - montant_satisfait : SUM(dispatch.quantite_attribuee * prix_unitaire)
-     * - montant_restant : besoin_total - satisfait
-     * Exclut les produits financiers.
-     */
+
     public function getRecapitulatifMontant(): array
     {
-        // Montant total des besoins (toutes les lignes besoin, y compris quantite=0 historique)
         $sqlBesoin = "SELECT COALESCE(SUM(b.quantite_max * p.prix_unitaire), 0) AS montant_besoin_total
                       FROM besoin b
                       JOIN produit p ON b.id_produit = p.id_produit
                       JOIN categorie c ON p.id_categorie = c.id_categorie
                       WHERE c.nom_categorie != 'Financier'";
 
-        // Montant satisfait via dispatch
         $sqlSatisfait = "SELECT COALESCE(SUM(d.quantite_attribuee * p.prix_unitaire), 0) AS montant_satisfait
                          FROM dispatch d
                          JOIN besoin b ON d.id_besoin = b.id_besoin
@@ -149,7 +141,6 @@ class VilleModel
                          JOIN categorie c ON p.id_categorie = c.id_categorie
                          WHERE c.nom_categorie != 'Financier'";
 
-        // Détail par produit
         $sqlDetail = "SELECT p.nom_produit, p.prix_unitaire,
                              COALESCE(bb.total_qte, 0) AS qte_besoin,
                              COALESCE(dd.total_attribue, 0) AS qte_satisfait,

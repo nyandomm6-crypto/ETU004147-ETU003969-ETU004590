@@ -83,7 +83,6 @@ class DispatchModel
                 throw new \Exception("Quantité insuffisante. Disponible : $totalDisponible");
             }
 
-            // 3️⃣ Récupérer dons FIFO
             $stmt = $this->db->prepare("
             SELECT * FROM don
             WHERE id_produit = ?
@@ -182,9 +181,7 @@ class DispatchModel
         return $stmt->execute([$idDon, $idBesoin, $quantiteAttribuee]);
     }
 
-    /**
-     * Récupère le stock de don disponible pour un produit donné
-     */
+   
     public function getDonRestantByProduit(int $id_produit): int
     {
         $stmt = $this->db->prepare("
@@ -196,9 +193,7 @@ class DispatchModel
         return (int) $stmt->fetchColumn();
     }
 
-    /**
-     * Récupère les besoins restants pour un produit avec ordre par date de saisie (le plus ancien en premier)
-     */
+   
     public function getBesoinsParDateSaisie(int $id_produit): array
     {
         $sql = "SELECT b.id_besoin, b.id_ville, v.nom_ville, b.quantite AS quantite_besoin,
@@ -357,19 +352,16 @@ class DispatchModel
                 throw new \Exception("Aucun besoin restant pour ce produit.");
             }
 
-            // Étape 1 : Calculer les parts proportionnelles avec parties entières et décimales
             $calculs = [];
             $totalPartieEntiere = 0;
 
             foreach ($besoins as $index => $besoin) {
                 $reste = (int)$besoin['reste'];
                 
-                // Calcul proportionnel exact
                 $partExacte = ($reste / $totalBesoinsRestants) * $quantiteDisponible;
                 $partieEntiere = (int) floor($partExacte);
                 $partieDecimale = $partExacte - $partieEntiere;
                 
-                // Ne pas dépasser le besoin restant
                 $partieEntiere = min($partieEntiere, $reste);
                 
                 $calculs[] = [
@@ -386,20 +378,16 @@ class DispatchModel
                 $totalPartieEntiere += $partieEntiere;
             }
 
-            // Étape 2 : Distribuer le reste aux villes avec les plus grandes parties décimales
             $resteADistribuer = $quantiteDisponible - $totalPartieEntiere;
 
             if ($resteADistribuer > 0) {
-                // Trier par partie décimale décroissante
                 usort($calculs, function($a, $b) {
                     return $b['partie_decimale'] <=> $a['partie_decimale'];
                 });
 
-                // Distribuer 1 unité à chaque ville par ordre de partie décimale jusqu'à épuisement
                 foreach ($calculs as &$calcul) {
                     if ($resteADistribuer <= 0) break;
                     
-                    // Vérifier qu'on ne dépasse pas le besoin restant de la ville
                     if ($calcul['quantite_finale'] < $calcul['reste_besoin']) {
                         $calcul['quantite_finale'] += 1;
                         $resteADistribuer -= 1;
@@ -408,7 +396,6 @@ class DispatchModel
                 unset($calcul);
             }
 
-            // Étape 3 : Effectuer les attributions
             $distributions = [];
             $totalDistribue = 0;
 
@@ -448,12 +435,9 @@ class DispatchModel
         }
     }
 
-    /**
-     * Méthode interne pour attribuer un don à un besoin (FIFO sur les dons)
-     */
+   
     private function attribuerDonABesoin(int $id_produit, int $id_besoin, int $quantite): void
     {
-        // Récupérer les dons disponibles FIFO
         $stmt = $this->db->prepare("
             SELECT * FROM don
             WHERE id_produit = ? AND quantite > 0
@@ -484,9 +468,7 @@ class DispatchModel
         }
     }
 
-    /**
-     * Récupère le tableau récapitulatif des dispatches par ville et produit
-     */
+    
     public function getTableauRecapitulatif(): array
     {
         $sql = "SELECT 
