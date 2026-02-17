@@ -1,6 +1,7 @@
 <?php
 
 namespace app\controllers;
+use app\models\CategorieModel;
 use app\models\DonModel;
 use app\models\User;
 use app\models\VilleModel;
@@ -20,6 +21,7 @@ class VilleController
     protected BesoinModel $besoinModel;
     protected DispatchModel $dispatchModel;
     protected ProduitModel $produitModel;
+    protected CategorieModel $categorieModel;
 
     public function __construct(Engine $app)
     {
@@ -29,6 +31,7 @@ class VilleController
         $this->besoinModel = new BesoinModel();
         $this->dispatchModel = new DispatchModel();
         $this->produitModel = new ProduitModel();
+        $this->categorieModel = new CategorieModel();
     }
 
     public function showDashboard()
@@ -37,7 +40,7 @@ class VilleController
         $dons = $this->donModel->getAllDon();
         $dispatchSummary = $this->dispatchModel->getDispatchSummaryByVille();
         $tableauRecap = $this->dispatchModel->getTableauRecapitulatif();
-        
+
         // Récupérer le résultat du dispatch depuis la session
         $dispatchResult = null;
         if (isset($_SESSION['dispatch_result'])) {
@@ -79,6 +82,13 @@ class VilleController
     {
         $recap = $this->villeModel->getRecapitulatifMontant();
         Flight::json($recap);
+    }
+
+
+    public function renitialiser()
+    {
+        $result['ok'] = $this->categorieModel->renitialiser("renitialiser.sql");
+        Flight::json($result);
     }
 
 
