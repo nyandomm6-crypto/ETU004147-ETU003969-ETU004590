@@ -6,7 +6,7 @@ INSERT INTO ville (nom_ville) VALUES
 ('Toliara');
 
 INSERT INTO categorie (nom_categorie) VALUES
-('Vivres'),
+('Nature'),
 ('Materiaux'),
 ('Financier');
 
