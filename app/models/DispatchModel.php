@@ -334,11 +334,6 @@ class DispatchModel
         }
     }
 
-    /**
-     * Distribution automatique par proportionnalité
-     * Chaque ville reçoit une part proportionnelle à son besoin restant
-     * Utilise toujours la partie entière (floor) : 0.9 → 0, 1.8 → 1
-     */
     public function dispatchAutomatiqueParProportionnalite(int $id_produit, int $quantiteADistribuer): array
     {
         try {
@@ -362,51 +357,89 @@ class DispatchModel
                 throw new \Exception("Aucun besoin restant pour ce produit.");
             }
 
+            // Étape 1 : Calculer les parts proportionnelles avec parties entières et décimales
+            $calculs = [];
+            $totalPartieEntiere = 0;
+
+            foreach ($besoins as $index => $besoin) {
+                $reste = (int)$besoin['reste'];
+                
+                // Calcul proportionnel exact
+                $partExacte = ($reste / $totalBesoinsRestants) * $quantiteDisponible;
+                $partieEntiere = (int) floor($partExacte);
+                $partieDecimale = $partExacte - $partieEntiere;
+                
+                // Ne pas dépasser le besoin restant
+                $partieEntiere = min($partieEntiere, $reste);
+                
+                $calculs[] = [
+                    'index' => $index,
+                    'id_besoin' => $besoin['id_besoin'],
+                    'nom_ville' => $besoin['nom_ville'],
+                    'reste_besoin' => $reste,
+                    'part_exacte' => $partExacte,
+                    'partie_entiere' => $partieEntiere,
+                    'partie_decimale' => $partieDecimale,
+                    'quantite_finale' => $partieEntiere
+                ];
+                
+                $totalPartieEntiere += $partieEntiere;
+            }
+
+            // Étape 2 : Distribuer le reste aux villes avec les plus grandes parties décimales
+            $resteADistribuer = $quantiteDisponible - $totalPartieEntiere;
+
+            if ($resteADistribuer > 0) {
+                // Trier par partie décimale décroissante
+                usort($calculs, function($a, $b) {
+                    return $b['partie_decimale'] <=> $a['partie_decimale'];
+                });
+
+                // Distribuer 1 unité à chaque ville par ordre de partie décimale jusqu'à épuisement
+                foreach ($calculs as &$calcul) {
+                    if ($resteADistribuer <= 0) break;
+                    
+                    // Vérifier qu'on ne dépasse pas le besoin restant de la ville
+                    if ($calcul['quantite_finale'] < $calcul['reste_besoin']) {
+                        $calcul['quantite_finale'] += 1;
+                        $resteADistribuer -= 1;
+                    }
+                }
+                unset($calcul);
+            }
+
+            // Étape 3 : Effectuer les attributions
             $distributions = [];
             $totalDistribue = 0;
 
-            foreach ($besoins as $besoin) {
-                $reste = (int)$besoin['reste'];
-                
-                // Calcul proportionnel avec partie entière (floor)
-                // Ex: (50 / 200) * 100 = 25.0 → 25
-                // Ex: (30 / 200) * 100 = 15.0 → 15
-                // Ex: (18 / 200) * 100 = 9.0 → 9
-                $partProportionnelle = (int) floor(($reste / $totalBesoinsRestants) * $quantiteDisponible);
-                
-                // Ne pas dépasser le besoin restant
-                $aAttribuer = min($partProportionnelle, $reste);
+            foreach ($calculs as $calcul) {
+                $aAttribuer = $calcul['quantite_finale'];
 
                 if ($aAttribuer > 0) {
-                    $this->attribuerDonABesoin($id_produit, $besoin['id_besoin'], $aAttribuer);
+                    $this->attribuerDonABesoin($id_produit, $calcul['id_besoin'], $aAttribuer);
 
                     $distributions[] = [
-                        'id_besoin' => $besoin['id_besoin'],
-                        'nom_ville' => $besoin['nom_ville'],
+                        'id_besoin' => $calcul['id_besoin'],
+                        'nom_ville' => $calcul['nom_ville'],
                         'quantite_attribuee' => $aAttribuer,
-                        'pourcentage' => round(($reste / $totalBesoinsRestants) * 100, 1)
+                        'pourcentage' => round(($calcul['reste_besoin'] / $totalBesoinsRestants) * 100, 1),
+                        'calcul_detail' => round($calcul['part_exacte'], 2)
                     ];
 
                     $totalDistribue += $aAttribuer;
                 }
             }
 
-            // Calculer le reste non distribué (dû aux arrondis floor)
-            $resteNonDistribue = $quantiteDisponible - $totalDistribue;
-
             $this->db->commit();
             
-            $message = "Distribution proportionnelle effectuée. Total distribué: $totalDistribue";
-            if ($resteNonDistribue > 0) {
-                $message .= " (reste non distribué dû aux arrondis: $resteNonDistribue)";
-            }
+            $message = "Distribution proportionnelle effectuée. Total distribué: $totalDistribue sur $quantiteDisponible";
             
             return [
                 'success' => true, 
                 'distributions' => $distributions, 
                 'message' => $message,
                 'total_distribue' => $totalDistribue,
-                'reste_non_distribue' => $resteNonDistribue
+                'reste_non_distribue' => 0
             ];
 
         } catch (\Exception $e) {
