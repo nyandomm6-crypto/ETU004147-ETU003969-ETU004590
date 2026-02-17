@@ -477,45 +477,6 @@
             <div class="card"><p class="empty">Aucune ville disponible. Veuillez saisir des villes et besoins.</p></div>
         <?php endif; ?>
 
-        <?php if (!empty($dispatch_summary) && is_array($dispatch_summary)): ?>
-            <div class="section-title">
-                <h2>Résumé des dispatchs par ville</h2>
-                <span class="line"></span>
-            </div>
-            
-            <div class="summary-grid">
-                <?php foreach ($dispatch_summary as $s): ?>
-                    <div class="summary-item">
-                        <div class="summary-city"><?php echo htmlspecialchars($s['nom_ville'] ?? ''); ?></div>
-                        <div class="summary-stats">
-                            <span>Total besoins</span>
-                            <strong><?php echo htmlspecialchars($s['total_besoin'] ?? 0); ?></strong>
-                        </div>
-                        <div class="summary-stats">
-                            <span>Total attribué</span>
-                            <strong style="color: #22c55e;"><?php echo htmlspecialchars($s['total_attribue'] ?? 0); ?></strong>
-                        </div>
-                        <div class="summary-stats">
-                            <span>Besoins restants</span>
-                            <strong style="color: <?php echo ($s['besoin_restant'] ?? 0) > 0 ? '#f59e0b' : '#22c55e'; ?>;">
-                                <?php echo htmlspecialchars($s['besoin_restant'] ?? 0); ?>
-                            </strong>
-                        </div>
-                        <?php 
-                        $total = max(1, $s['total_besoin'] ?? 1);
-                        $restant = $s['besoin_restant'] ?? 0;
-                        $pourcentage = round((($total - $restant) / $total) * 100);
-                        ?>
-                        <div class="progress" style="margin-top: 16px;">
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: <?php echo $pourcentage; ?>%"></div>
-                            </div>
-                            <span class="progress-value"><?php echo $pourcentage; ?>%</span>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
 
         <!-- ── Liste des dons ─────────────── -->
         <div class="section-title">

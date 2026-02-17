@@ -91,7 +91,7 @@ $burl = \Flight::get('flight.base_url');
         <a href="<?= $burl ?>/formBesoin">📋 Besoin</a>
         <a href="<?= $burl ?>/showFormDon">🎁 Don</a>
         <a href="<?= $burl ?>/showFormDispatch">⚡ Dispatcher</a>
-        <a href="<?= $burl ?>/listBesoinRestant">📊 Simulation</a>
+        <a href="<?= $burl ?>/listBesoinRestant">📊 Simulation d'achat</a>
         <a href="<?= $burl ?>/showTableauRecap">📈 Récapitulatif</a>
     </nav>
 </div>

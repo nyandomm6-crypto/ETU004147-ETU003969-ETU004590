@@ -158,7 +158,7 @@
 </head>
 
 <body>
-    <?php Flight::render('partial/header.php'); ?>
+	<?php Flight::render('partial/header.php'); ?>
 
 
 	<main class="page">
@@ -183,7 +183,8 @@
 					<?php
 					foreach ($produit as $p): ?>
 						<option value="<?php echo (int) $p['id_produit']; ?>">
-							<?php echo htmlspecialchars($p['nom_produit']); ?></option>
+							<?php echo htmlspecialchars($p['nom_produit']); ?>
+						</option>
 					<?php endforeach; ?>
 				</select>
 			</div>
@@ -209,6 +210,13 @@
 					<label for="quantite">Quantité à attribuer</label>
 					<input type="number" name="quantite" id="quantite" min="1" required>
 				</div>
+				
+				<input type="radio" name="categorie" value="vivres"> Par date de saisie <br>
+				<input type="radio" name="categorie" value="materiaux"> Par demande le plus petit <br>
+				<input type="radio" name="categorie" value="financier"> Par proportionnalite <br>
+
+
+
 
 				<div>
 					<button type="submit" class="btn-submit">⚡ Créer dispatch</button>
@@ -219,17 +227,19 @@
 		</div>
 	</main>
 
-		<!-- Remaining total display -->
-		<div style="width:100%;max-width:650px;margin:12px auto;text-align:center;">
-			<div id="remaining-info" style="background:#fff;border-radius:10px;padding:12px;border:1px solid #e6e6e6;max-width:650px;margin:0 auto;color:#0f172a;">Besoin restant: —</div>
-		</div>
+	<!-- Remaining total display -->
+	<div style="width:100%;max-width:650px;margin:12px auto;text-align:center;">
+		<div id="remaining-info"
+			style="background:#fff;border-radius:10px;padding:12px;border:1px solid #e6e6e6;max-width:650px;margin:0 auto;color:#0f172a;">
+			Besoin restant: —</div>
+	</div>
 
 	<?php Flight::render('partial/footer.php'); ?>
 </body>
 
 <script>
 	var select = document.getElementById("id_produit");
-	select.addEventListener("change", function() {
+	select.addEventListener("change", function () {
 		var id_produit = this.value;
 		var selectBesoin = document.getElementById("id_besoin");
 		var remainingInfo = document.getElementById('remaining-info');
@@ -240,7 +250,7 @@
 			return;
 		}
 
-		ajax({id_produit: id_produit}, "<?= $base_url ?>/dispatch/getInfoByProduit")
+		ajax({ id_produit: id_produit }, "<?= $base_url ?>/dispatch/getInfoByProduit")
 			.then(data => {
 				// Afficher total restant
 				remainingInfo.textContent = 'Total restant: ' + (data.totalRestant || 0);
@@ -248,7 +258,7 @@
 				// Remplir le dropdown avec les vrais id_besoin
 				selectBesoin.innerHTML = '<option value="">-- choisir --</option>';
 				if (data.besoins && data.besoins.length > 0) {
-					data.besoins.forEach(function(b) {
+					data.besoins.forEach(function (b) {
 						var option = document.createElement("option");
 						option.value = b.id_besoin;
 						option.textContent = b.nom_ville + " — Besoin: " + b.quantite_besoin + " — Reste: " + b.reste;
