@@ -175,6 +175,14 @@ class DispatchModel
     }
 
 
+    public function createDispatch($idDon, $idBesoin, $quantiteAttribuee)
+    {
+        $sql = "INSERT INTO dispatch (id_don, id_besoin, quantite_attribuee) VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$idDon, $idBesoin, $quantiteAttribuee]);
+    }
+
+
 
 
 

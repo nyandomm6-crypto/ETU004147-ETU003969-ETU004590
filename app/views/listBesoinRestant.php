@@ -226,6 +226,11 @@
         <div class="section-title">
             <h2>Reste des besoins</h2><span class="line"></span>
         </div>
+        <div>
+            <?php if (isset($error)): ?>
+                <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+            <?php endif; ?>
+        </div>
 
         <div class="card">
             <div class="card-head"><span class="dot"></span> Quantités encore nécessaires</div>

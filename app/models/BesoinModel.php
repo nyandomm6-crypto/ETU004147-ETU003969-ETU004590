@@ -89,5 +89,19 @@ class BesoinModel
         return array_values($result);
     }
 
-    
+
+    public function getIdBesoinByIdProduitAndIdVille($id_produit, $id_ville)
+    {
+        $sql = "SELECT id_besoin 
+            FROM besoin 
+            WHERE id_produit = ? AND id_ville = ?
+            LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id_produit, $id_ville]);
+
+        return $stmt->fetchColumn(); 
+    }
+
+
 }

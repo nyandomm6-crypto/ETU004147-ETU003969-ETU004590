@@ -77,7 +77,7 @@ class VilleModel
 
     public function getResteBesoinParProduitParVille(): array
     {
-$sql = "SELECT v.id_ville, v.nom_ville,
+        $sql = "SELECT v.id_ville, v.nom_ville,
                        p.id_produit, p.nom_produit,
                        SUM(b.quantite) AS total_besoin,
                        COALESCE(SUM(d.quantite_attribuee), 0) AS total_attribue,
