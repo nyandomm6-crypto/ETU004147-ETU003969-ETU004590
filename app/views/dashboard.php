@@ -386,7 +386,9 @@
                             <tr>
                                 <th>Ville</th>
                                 <th>Produit</th>
+                                <th>Prix Unit.</th>
                                 <th>Besoin Total</th>
+                                <th>Valeur Totale (Ar)</th>
                                 <th>Dons Attribués</th>
                                 <th>Restant</th>
                                 <th>Couverture</th>
@@ -396,18 +398,27 @@
                             <?php 
                             $totalBesoin = 0;
                             $totalAttribue = 0;
+                            $totalValeurBesoin = 0;
+                            $totalValeurAttribue = 0;
                             foreach ($tableau_recap as $row): 
                                 $besoin = (int)($row['total_besoin'] ?? 0);
                                 $attribue = (int)($row['total_attribue'] ?? 0);
+                                $prixUnitaire = (float)($row['prix_unitaire'] ?? 0);
+                                $valeurBesoin = $besoin * $prixUnitaire;
+                                $valeurAttribue = $attribue * $prixUnitaire;
                                 $restant = max(0, $besoin - $attribue);
                                 $pourcent = $besoin > 0 ? round(($attribue / $besoin) * 100, 1) : 0;
                                 $totalBesoin += $besoin;
                                 $totalAttribue += $attribue;
+                                $totalValeurBesoin += $valeurBesoin;
+                                $totalValeurAttribue += $valeurAttribue;
                             ?>
                                 <tr>
                                     <td><strong><?php echo htmlspecialchars($row['nom_ville'] ?? ''); ?></strong></td>
                                     <td><?php echo htmlspecialchars($row['nom_produit'] ?? ''); ?></td>
+                                    <td><?php echo number_format($prixUnitaire, 0, ',', ' '); ?> Ar</td>
                                     <td><span class="tag tag-blue"><?php echo number_format($besoin); ?></span></td>
+                                    <td><strong style="color: #1e40af;"><?php echo number_format($valeurBesoin, 0, ',', ' '); ?> Ar</strong></td>
                                     <td><span class="tag tag-green"><?php echo number_format($attribue); ?></span></td>
                                     <td>
                                         <?php if ($restant > 0): ?>
@@ -429,12 +440,14 @@
                         </tbody>
                         <?php 
                         $totalRestant = $totalBesoin - $totalAttribue;
+                        $totalValeurRestant = $totalValeurBesoin - $totalValeurAttribue;
                         $tauxGlobal = $totalBesoin > 0 ? round(($totalAttribue / $totalBesoin) * 100, 1) : 0;
                         ?>
                         <tfoot style="background: #f8fafc; font-weight: 600;">
                             <tr>
-                                <td colspan="2"><strong>TOTAL GÉNÉRAL</strong></td>
+                                <td colspan="3"><strong>TOTAL GÉNÉRAL</strong></td>
                                 <td><span class="tag tag-blue"><?= number_format($totalBesoin) ?></span></td>
+                                <td><strong style="color: #1e40af; font-size: 15px;"><?= number_format($totalValeurBesoin, 0, ',', ' ') ?> Ar</strong></td>
                                 <td><span class="tag tag-green"><?= number_format($totalAttribue) ?></span></td>
                                 <td><span class="tag <?= $totalRestant > 0 ? 'tag-amber' : 'tag-green' ?>"><?= number_format(max(0, $totalRestant)) ?></span></td>
                                 <td>
@@ -448,6 +461,22 @@
                             </tr>
                         </tfoot>
                     </table>
+                </div>
+                
+                <!-- Résumé des valeurs totales -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; padding: 20px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-top: 1px solid #e2e8f0;">
+                    <div style="text-align: center; padding: 16px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Valeur Totale Besoins</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #1e40af; margin-top: 8px;"><?= number_format($totalValeurBesoin, 0, ',', ' ') ?> Ar</div>
+                    </div>
+                    <div style="text-align: center; padding: 16px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Valeur Dons Attribués</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #15803d; margin-top: 8px;"><?= number_format($totalValeurAttribue, 0, ',', ' ') ?> Ar</div>
+                    </div>
+                    <div style="text-align: center; padding: 16px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                        <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600;">Valeur Restante</div>
+                        <div style="font-size: 24px; font-weight: 700; color: <?= $totalValeurRestant > 0 ? '#b45309' : '#15803d' ?>; margin-top: 8px;"><?= number_format(max(0, $totalValeurRestant), 0, ',', ' ') ?> Ar</div>
+                    </div>
                 </div>
             </div>
         <?php endif; ?>
