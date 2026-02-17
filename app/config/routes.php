@@ -46,6 +46,7 @@ $router->post('/dispatch/create', [$dispatchController, 'createDispatch']);
 $router->post('/dispatch/getInfoByProduit', [$dispatchController, 'getInfoByProduit']);
 $router->post('/prixEstimatif', [$achatController, 'createPrixAchat']);
 $router->post('/validateAchat', [$achatController, 'validateAchat']);
+$router->get('/getDonArgent', [$achatController, 'getDonArgent']);
 
 
 

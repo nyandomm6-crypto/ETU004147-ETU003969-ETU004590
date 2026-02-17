@@ -68,6 +68,9 @@ class DispatchController
         $quantite = $data['quantite'];
         $result = $this->dispatchModel->dispatchDon($id_besoin, $quantite);
 
+        // Marquer les besoins individuels épuisés (quantite = 0)
+        $this->villeModel->updateBesoinEpuise();
+
         $this->app->redirect('/');
 
     }

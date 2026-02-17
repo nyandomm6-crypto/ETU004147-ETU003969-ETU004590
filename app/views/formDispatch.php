@@ -230,36 +230,34 @@
 	var select = document.getElementById("id_produit");
 	select.addEventListener("change", function() {
 		var id_produit = this.value;
-		if (id_produit) {
-			ajax({id_produit: id_produit}, "<?= $base_url ?>/dispatch/getInfoByProduit")
-				.then(data => {
-					// update total remaining display
-					var remainingInfo = document.getElementById('remaining-info');
-					var totalRestant = 0;
-					if (data && Array.isArray(data.sumBesoinRestant)) {
-						totalRestant = data.sumBesoinRestant.reduce(function(acc, cur) {
-							return acc + (parseInt(cur.total_restant) || 0);
-						}, 0);
-					}
-					remainingInfo.textContent = 'Total restant: ' + totalRestant;
+		var selectBesoin = document.getElementById("id_besoin");
+		var remainingInfo = document.getElementById('remaining-info');
 
-					var selectBesoin = document.getElementById("id_besoin");
-					selectBesoin.innerHTML = '<option value="">-- choisir --</option>';
-					data.ville.forEach(ville => {
-						data.sumBesoin.forEach(besoin => {
-							if (parseInt(besoin.id_ville) === parseInt(ville.id_ville)) {
-								var option = document.createElement("option");
-								option.value = ville.id_ville;
-								var restantObj = (data.sumBesoinRestant || []).find(r => parseInt(r.id_ville) === parseInt(ville.id_ville));
-								var restant = restantObj ? (restantObj.total_restant || 0) : 0;
-								option.textContent = "Ville " + (ville.nom_ville || ville.nom) + " - Besoin total: " + besoin.total_besoin + " - Restant: " + restant;
-								selectBesoin.appendChild(option);
-							}
-						});
-					});
-				})
-				.catch(error => console.error("Erreur:", error));
+		if (!id_produit) {
+			selectBesoin.innerHTML = '<option value="">-- choisir --</option>';
+			remainingInfo.textContent = 'Besoin restant: —';
+			return;
 		}
+
+		ajax({id_produit: id_produit}, "<?= $base_url ?>/dispatch/getInfoByProduit")
+			.then(data => {
+				// Afficher total restant
+				remainingInfo.textContent = 'Total restant: ' + (data.totalRestant || 0);
+
+				// Remplir le dropdown avec les vrais id_besoin
+				selectBesoin.innerHTML = '<option value="">-- choisir --</option>';
+				if (data.besoins && data.besoins.length > 0) {
+					data.besoins.forEach(function(b) {
+						var option = document.createElement("option");
+						option.value = b.id_besoin;
+						option.textContent = b.nom_ville + " — Besoin: " + b.quantite_besoin + " — Reste: " + b.reste;
+						selectBesoin.appendChild(option);
+					});
+				} else {
+					selectBesoin.innerHTML = '<option value="">Aucun besoin restant</option>';
+				}
+			})
+			.catch(error => console.error("Erreur:", error));
 	});
 
 	function ajax(data, lien) {

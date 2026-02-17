@@ -83,8 +83,43 @@ class AchatController
         $id_besoin = $this->besoinModel->getIdBesoinByIdProduitAndIdVille($data['id_produit'], $data['id_ville']);
         $quantite = $data['quantite'];
 
-        $this->dispatchModel->createDispatch(0,$id_besoin, $quantite);
+        $id_produit = $data['id_produit'];
+        $frais = $data['frais'] ?? 0;
+        $prix_unitaire = $this->produitModel->getPrixUnitaireByIdProduit($id_produit);
+        $prixTotalAchat = $prix_unitaire * $quantite + ($prix_unitaire * $quantite * $frais / 100);
+
+        $donArgentResult = $this->donModel->getAllDonArgent();
+        $budgetDisponible = (float)($donArgentResult[0]['total'] ?? 0);
+
+        if ($prixTotalAchat > $budgetDisponible) {
+            // Budget insuffisant — ne pas valider
+            $this->app->render('formAchat', [
+                'base_url' => Flight::get('flight.base_url'),
+                'id_produit' => $data['id_produit'],
+                'id_ville' => $data['id_ville'],
+                'error' => 'Budget insuffisant. Prix estimatif (' . number_format($prixTotalAchat, 2) . ' Ar) dépasse le don argent disponible (' . number_format($budgetDisponible, 2) . ' Ar).'
+            ]);
+            return;
+        }
+
+        $this->dispatchModel->createDispatch(0, $id_besoin, $quantite);
         $this->achatModel->createAchat($data);
+
+        // Retirer le montant du don argent
+        $this->donModel->retirerArgent($prixTotalAchat);
+
+        // Marquer les besoins individuels épuisés (quantite = 0)
+        $this->villeModel->updateBesoinEpuise();
+
+        $this->app->redirect('/listBesoinRestant');
+    }
+
+
+    public function getDonArgent()
+    {
+        $result = $this->donModel->getAllDonArgent();
+        $total = (float)($result[0]['total'] ?? 0);
+        Flight::json(['budget' => $total]);
     }
 
 

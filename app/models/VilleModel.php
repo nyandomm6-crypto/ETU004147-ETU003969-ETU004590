@@ -36,43 +36,38 @@ class VilleModel
 
     public function getVillebyIdProduit($id_produit)
     {
-        // cities that have a besoin for this product
-        $stmt = $this->db->prepare("SELECT DISTINCT v.id_ville, v.nom_ville FROM ville v JOIN besoin b ON v.id_ville = b.id_ville WHERE b.id_produit = ?");
+        
+        $sql = "SELECT b.id_besoin, b.id_ville, v.nom_ville, b.quantite AS quantite_besoin,
+                       COALESCE(d_sum.total_dispatch, 0) AS total_dispatch,
+                       (b.quantite - COALESCE(d_sum.total_dispatch, 0)) AS reste
+                FROM besoin b
+                JOIN ville v ON b.id_ville = v.id_ville
+                LEFT JOIN (
+                    SELECT id_besoin, SUM(quantite_attribuee) AS total_dispatch
+                    FROM dispatch
+                    GROUP BY id_besoin
+                ) d_sum ON b.id_besoin = d_sum.id_besoin
+                WHERE b.id_produit = ?
+                  AND b.quantite > 0
+                HAVING reste > 0
+                ORDER BY v.nom_ville ASC";
+
+        $stmt = $this->db->prepare($sql);
         $stmt->execute([$id_produit]);
-        $ville = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $besoins = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // total besoin per city for this product
-        $stmsumBesoin = $this->db->prepare("SELECT b.id_ville, SUM(b.quantite) AS total_besoin FROM besoin b WHERE b.id_produit = ? GROUP BY b.id_ville");
-        $stmsumBesoin->execute([$id_produit]);
-        $sumBesoin = $stmsumBesoin->fetchAll(PDO::FETCH_ASSOC);
-
-        // total attribue per city for this product (from dispatch -> besoin -> ville)
-        $stmsumAttribue = $this->db->prepare(
-            "SELECT b.id_ville, COALESCE(SUM(d.quantite_attribuee),0) AS total_attribue
-             FROM dispatch d
-             JOIN besoin b ON d.id_besoin = b.id_besoin
-             WHERE b.id_produit = ?
-             GROUP BY b.id_ville"
-        );
-        $stmsumAttribue->execute([$id_produit]);
-        $sumAttribue = $stmsumAttribue->fetchAll(PDO::FETCH_ASSOC);
-
-        $sumBesoinRestant = [];
-        $attribueByVille = [];
-        foreach ($sumAttribue as $a) {
-            $attribueByVille[(int) $a['id_ville']] = (int) $a['total_attribue'];
+        // Calcul total restant
+        $totalRestant = 0;
+        foreach ($besoins as $b) {
+            $totalRestant += (int) $b['reste'];
         }
-        foreach ($sumBesoin as $b) {
-            $vid = (int) $b['id_ville'];
-            $totalBesoin = (int) $b['total_besoin'];
-            $totalAttribue = $attribueByVille[$vid] ?? 0;
-            $sumBesoinRestant[] = [
-                'id_ville' => $vid,
-                'total_restant' => max(0, $totalBesoin - $totalAttribue)
-            ];
-        }
-        return ['ville' => $ville, 'sumBesoin' => $sumBesoin, 'sumBesoinRestant' => $sumBesoinRestant];
+
+        return [
+            'besoins' => $besoins,
+            'totalRestant' => $totalRestant
+        ];
     }
+
 
 
     public function getResteBesoinParProduitParVille(): array
@@ -81,18 +76,26 @@ class VilleModel
                        bb.id_produit, p.nom_produit,
                        bb.total_besoin,
                        COALESCE(dd.total_attribue, 0) AS total_attribue,
-                       (bb.total_besoin - COALESCE(dd.total_attribue, 0)) AS reste
+                       COALESCE(aa.total_achats, 0) AS total_achats,
+                       (bb.total_besoin - COALESCE(dd.total_attribue, 0) - COALESCE(aa.total_achats, 0)) AS reste
                 FROM (
                     SELECT id_ville, id_produit, SUM(quantite) AS total_besoin
                     FROM besoin
+                    WHERE quantite > 0
                     GROUP BY id_ville, id_produit
                 ) bb
                 LEFT JOIN (
                     SELECT b.id_ville, b.id_produit, SUM(d.quantite_attribuee) AS total_attribue
                     FROM dispatch d
                     JOIN besoin b ON d.id_besoin = b.id_besoin
+                    WHERE b.quantite > 0
                     GROUP BY b.id_ville, b.id_produit
                 ) dd ON bb.id_ville = dd.id_ville AND bb.id_produit = dd.id_produit
+                LEFT JOIN (
+                    SELECT id_produit, SUM(quantite_achats) AS total_achats
+                    FROM achat
+                    GROUP BY id_produit
+                ) aa ON bb.id_produit = aa.id_produit
                 JOIN ville v ON bb.id_ville = v.id_ville
                 JOIN produit p ON bb.id_produit = p.id_produit
                 HAVING reste > 0
@@ -101,6 +104,30 @@ class VilleModel
         $stmt = $this->db->query($sql);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+  
+    public function updateBesoinEpuise(): void
+    {
+        $sql = "UPDATE besoin b
+                JOIN (
+                    SELECT b2.id_besoin
+                    FROM besoin b2
+                    JOIN (
+                        SELECT id_besoin, SUM(quantite_attribuee) AS total_dispatch
+                        FROM dispatch
+                        GROUP BY id_besoin
+                    ) d_sum ON b2.id_besoin = d_sum.id_besoin
+                    WHERE b2.quantite > 0
+                      AND d_sum.total_dispatch >= b2.quantite
+                ) epuises ON b.id_besoin = epuises.id_besoin
+                SET b.quantite = 0";
+
+        $this->db->exec($sql);
+    }
+
+
+    
 
 
 }
