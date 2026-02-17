@@ -150,7 +150,7 @@
         <table>
             <thead>
               1  <tr>
-                    <th>Produit</th>
+                    <th>Produittt</th>
                     <th>Quantité</th>
                     <th>Date de saisie</th>
                 </tr>
