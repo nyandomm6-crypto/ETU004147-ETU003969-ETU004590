@@ -423,6 +423,10 @@
             <a href="<?php echo $base_url; ?>/formBesoin">📋 Saisir un besoin</a>
             <a href="<?php echo $base_url; ?>/showFormDon">🎁 Saisir un don</a>
             <a href="<?php echo $base_url; ?>/showFormDispatch">⚡ Dispatcher</a>
+            <a href="<?php echo $base_url; ?>/listBesoinRestant">Simulation</a>
+            <a href="<?php echo $base_url; ?>/showTableauRecap">Tableau recapitulatif</a>
+
+
         </nav>
     </div>
 

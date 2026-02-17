@@ -213,12 +213,16 @@
     <div class="topbar">
         <div class="brand">
             <span class="logo">BNGRC</span>
-            <h1>Besoins restants par ville &amp; produit</h1>
+            <h1>Tableau de bord — Suivi des dons</h1>
         </div>
         <nav>
-            <a href="<?= $base_url ?>/">🏠 Dashboard</a>
-            <a href="<?= $base_url ?>/formBesoin">📋 Besoin</a>
-            <a href="<?= $base_url ?>/showFormDon">🎁 Don</a>
+            <a href="<?php echo $base_url; ?>/formBesoin">📋 Saisir un besoin</a>
+            <a href="<?php echo $base_url; ?>/showFormDon">🎁 Saisir un don</a>
+            <a href="<?php echo $base_url; ?>/showFormDispatch">⚡ Dispatcher</a>
+            <a href="<?php echo $base_url; ?>/listBesoinRestant">Simulation</a>
+            <a href="<?php echo $base_url; ?>/showTableauRecap">Tableau recapitulatif</a>
+
+
         </nav>
     </div>
 
