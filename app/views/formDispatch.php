@@ -18,7 +18,6 @@
 			min-height: 100vh;
 			display: flex;
 			flex-direction: column;
-			padding: 24px;
 		}
 
 		.page {
@@ -159,6 +158,8 @@
 </head>
 
 <body>
+    <?php Flight::render('partial/header.php'); ?>
+
 
 	<main class="page">
 		<div class="card">

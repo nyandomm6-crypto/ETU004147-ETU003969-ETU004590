@@ -131,6 +131,7 @@
 </head>
 <body>
     
+    <?php Flight::render('partial/header.php'); ?>
 
 <div class="container">
     <div class="page-header">

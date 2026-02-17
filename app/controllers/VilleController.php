@@ -56,6 +56,21 @@ class VilleController
         ]);
     }
 
-    
+    public function showRecapitulatif()
+    {
+        $recap = $this->villeModel->getRecapitulatifMontant();
+        $this->app->render('recapitulatif.php', [
+            'base_url' => Flight::get('flight.base_url'),
+            'recap' => $recap
+        ]);
+    }
+
+    public function getRecapitulatifJson()
+    {
+        $recap = $this->villeModel->getRecapitulatifMontant();
+        Flight::json($recap);
+    }
+
+
 
 }

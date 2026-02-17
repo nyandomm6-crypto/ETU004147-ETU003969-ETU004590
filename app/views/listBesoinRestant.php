@@ -21,57 +21,6 @@
             color: #1e293b;
         }
 
-        .topbar {
-            background: linear-gradient(135deg, #0f3460, #1a56db);
-            color: #fff;
-            padding: 18px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        .topbar .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .topbar .brand .logo {
-            background: #fff;
-            color: #1a56db;
-            font-weight: 800;
-            font-size: 13px;
-            padding: 6px 12px;
-            border-radius: 8px;
-            letter-spacing: 1px;
-        }
-
-        .topbar .brand h1 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        nav {
-            display: flex;
-            gap: 8px;
-        }
-
-        nav a {
-            color: #fff;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            background: rgba(255, 255, 255, 0.12);
-            transition: background .2s;
-        }
-
-        nav a:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
         .container {
             flex: 1;
             max-width: 900px;
@@ -210,21 +159,7 @@
 
 <body>
 
-    <div class="topbar">
-        <div class="brand">
-            <span class="logo">BNGRC</span>
-            <h1>Tableau de bord — Suivi des dons</h1>
-        </div>
-        <nav>
-            <a href="<?php echo $base_url; ?>/formBesoin">📋 Saisir un besoin</a>
-            <a href="<?php echo $base_url; ?>/showFormDon">🎁 Saisir un don</a>
-            <a href="<?php echo $base_url; ?>/showFormDispatch">⚡ Dispatcher</a>
-            <a href="<?php echo $base_url; ?>/listBesoinRestant">Simulation</a>
-            <a href="<?php echo $base_url; ?>/showTableauRecap">Tableau recapitulatif</a>
-
-
-        </nav>
-    </div>
+    <?php Flight::render('partial/header.php'); ?>
 
     <div class="container">
         <div class="section-title">
@@ -263,7 +198,7 @@
                                     <input type="hidden" name="id_ville" value="<?= (int) ($b['id_ville'] ?? 0) ?>">
                                     <input type="hidden" name="id_produit" value="<?= (int) ($b['id_produit'] ?? 0) ?>">
                                     <input type="hidden" name="reste" value="<?= (int) ($b['reste'] ?? 0) ?>">   
-                                    <td><input type="submit" value="Acheter"></td>
+                                    <td><input type="submit" value="Simuler le résultat"></td>
                                 </form>
                             </tr>
                         <?php endforeach; ?>

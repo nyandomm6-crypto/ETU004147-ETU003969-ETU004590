@@ -127,7 +127,72 @@ class VilleModel
     }
 
 
-    
+    /**
+     * Récapitulatif en montant (Ar) :
+     * - montant_besoin_total : SUM(besoin.quantite * prix_unitaire) pour tous les besoins
+     * - montant_satisfait : SUM(dispatch.quantite_attribuee * prix_unitaire)
+     * - montant_restant : besoin_total - satisfait
+     * Exclut les produits financiers.
+     */
+    public function getRecapitulatifMontant(): array
+    {
+        // Montant total des besoins (toutes les lignes besoin, y compris quantite=0 historique)
+        $sqlBesoin = "SELECT COALESCE(SUM(b.quantite * p.prix_unitaire), 0) AS montant_besoin_total
+                      FROM besoin b
+                      JOIN produit p ON b.id_produit = p.id_produit
+                      JOIN categorie c ON p.id_categorie = c.id_categorie
+                      WHERE c.nom_categorie != 'Financier'";
+
+        // Montant satisfait via dispatch
+        $sqlSatisfait = "SELECT COALESCE(SUM(d.quantite_attribuee * p.prix_unitaire), 0) AS montant_satisfait
+                         FROM dispatch d
+                         JOIN besoin b ON d.id_besoin = b.id_besoin
+                         JOIN produit p ON b.id_produit = p.id_produit
+                         JOIN categorie c ON p.id_categorie = c.id_categorie
+                         WHERE c.nom_categorie != 'Financier'";
+
+        // Détail par produit
+        $sqlDetail = "SELECT p.nom_produit, p.prix_unitaire,
+                             COALESCE(bb.total_qte, 0) AS qte_besoin,
+                             COALESCE(dd.total_attribue, 0) AS qte_satisfait,
+                             (COALESCE(bb.total_qte, 0) - COALESCE(dd.total_attribue, 0)) AS qte_restant,
+                             COALESCE(bb.total_qte, 0) * p.prix_unitaire AS montant_besoin,
+                             COALESCE(dd.total_attribue, 0) * p.prix_unitaire AS montant_satisfait,
+                             (COALESCE(bb.total_qte, 0) - COALESCE(dd.total_attribue, 0)) * p.prix_unitaire AS montant_restant
+                      FROM produit p
+                      JOIN categorie c ON p.id_categorie = c.id_categorie
+                      LEFT JOIN (
+                          SELECT id_produit, SUM(quantite) AS total_qte FROM besoin GROUP BY id_produit
+                      ) bb ON p.id_produit = bb.id_produit
+                      LEFT JOIN (
+                          SELECT b.id_produit, SUM(d.quantite_attribuee) AS total_attribue
+                          FROM dispatch d
+                          JOIN besoin b ON d.id_besoin = b.id_besoin
+                          GROUP BY b.id_produit
+                      ) dd ON p.id_produit = dd.id_produit
+                      WHERE c.nom_categorie != 'Financier'
+                        AND COALESCE(bb.total_qte, 0) > 0
+                      ORDER BY p.nom_produit";
+
+        $stmtB = $this->db->query($sqlBesoin);
+        $montantBesoinTotal = (float) $stmtB->fetchColumn();
+
+        $stmtS = $this->db->query($sqlSatisfait);
+        $montantSatisfait = (float) $stmtS->fetchColumn();
+
+        $stmtD = $this->db->query($sqlDetail);
+        $details = $stmtD->fetchAll(PDO::FETCH_ASSOC);
+
+        return [
+            'montant_besoin_total' => $montantBesoinTotal,
+            'montant_satisfait' => $montantSatisfait,
+            'montant_restant' => max(0, $montantBesoinTotal - $montantSatisfait),
+            'details' => $details
+        ];
+    }
+
+
+
 
 
 }

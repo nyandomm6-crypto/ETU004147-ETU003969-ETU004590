@@ -25,69 +25,6 @@
             letter-spacing: -0.02em;
         }
 
-        /* ── Top bar ─────────────────────────── */
-        .topbar {
-            background: #ffffff;
-            border-bottom: 1px solid #eef2f6;
-            padding: 16px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(8px);
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        .topbar .brand {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .topbar .brand .logo {
-            background: linear-gradient(135deg, #2563eb, #1e40af);
-            color: white;
-            font-weight: 700;
-            font-size: 14px;
-            padding: 8px 16px;
-            border-radius: 12px;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-        }
-
-        .topbar .brand h1 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #0f172a;
-        }
-
-        nav {
-            display: flex;
-            gap: 8px;
-        }
-
-        nav a {
-            color: #475569;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-        }
-
-        nav a:hover {
-            background: #ffffff;
-            border-color: #2563eb;
-            color: #2563eb;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
         /* ── Container ───────────────────────── */
         .container {
             max-width: 1400px;
@@ -359,28 +296,6 @@
 
         /* ── Responsive ───────────────────────── */
         @media (max-width: 768px) {
-            .topbar {
-                flex-direction: column;
-                gap: 16px;
-                padding: 16px;
-            }
-            
-            .topbar .brand {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            nav {
-                width: 100%;
-                justify-content: stretch;
-            }
-            
-            nav a {
-                flex: 1;
-                text-align: center;
-                padding: 10px;
-            }
-            
             .stats-grid {
                 grid-template-columns: 1fr;
             }
@@ -414,21 +329,7 @@
 <body>
 
     <!-- ── Top bar ─────────────────────────── -->
-    <div class="topbar">
-        <div class="brand">
-            <span class="logo">BNGRC</span>
-            <h1>Tableau de bord — Suivi des dons</h1>
-        </div>
-        <nav>
-            <a href="<?php echo $base_url; ?>/formBesoin">📋 Saisir un besoin</a>
-            <a href="<?php echo $base_url; ?>/showFormDon">🎁 Saisir un don</a>
-            <a href="<?php echo $base_url; ?>/showFormDispatch">⚡ Dispatcher</a>
-            <a href="<?php echo $base_url; ?>/listBesoinRestant">Simulation</a>
-            <a href="<?php echo $base_url; ?>/showTableauRecap">Tableau recapitulatif</a>
-
-
-        </nav>
-    </div>
+    <?php Flight::render('partial/header.php'); ?>
 
     <div class="container">
 

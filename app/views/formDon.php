@@ -113,6 +113,7 @@
 </head>
 
 <body>
+    <?php Flight::render('partial/header.php'); ?>
 
     <main class="page">
     <div class="card">

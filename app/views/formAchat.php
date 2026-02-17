@@ -12,6 +12,11 @@
             background: linear-gradient(135deg, #e8f0fe 0%, #f5f7fa 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+        }
+        .page-content {
+            flex: 1;
+            display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
@@ -73,7 +78,9 @@
 </head>
 
 <body>
+    <?php Flight::render('partial/header.php'); ?>
     
+    <div class="page-content">
     <div class="card">
         <div class="card-header">
             <span class="badge">BNGRC</span>
@@ -185,6 +192,7 @@
             });
         }
     </script>
+    </div>
 </body>
 
 </html>
