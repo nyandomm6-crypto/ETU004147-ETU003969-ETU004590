@@ -36,13 +36,23 @@ class VilleController
         $villes = $this->besoinModel->getVillesWithBesoins();
         $dons = $this->donModel->getAllDon();
         $dispatchSummary = $this->dispatchModel->getDispatchSummaryByVille();
+        $tableauRecap = $this->dispatchModel->getTableauRecapitulatif();
+        
+        // Récupérer le résultat du dispatch depuis la session
+        $dispatchResult = null;
+        if (isset($_SESSION['dispatch_result'])) {
+            $dispatchResult = $_SESSION['dispatch_result'];
+            unset($_SESSION['dispatch_result']);
+        }
 
         $this->app->render('dashboard.php', [
             'base_url' => Flight::get('flight.base_url'),
             'villes' => $villes,
             'dons' => $dons,
             'dispatch_summary' => $dispatchSummary,
-            'produit' => $this->produitModel->getAllProduits()
+            'produit' => $this->produitModel->getAllProduits(),
+            'tableau_recap' => $tableauRecap,
+            'dispatch_result' => $dispatchResult
         ]);
     }
 

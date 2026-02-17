@@ -32,7 +32,7 @@ $router->get('/', [$villeController, 'showDashboard']);
 $router->get('/showFormDon', [$donController, 'showFormDon']);
 $router->get('/showFormDispatch', [$dispatchController, 'showFormDispatch']);
 $router->get('/listBesoinRestant', [$villeController, 'getListBesoinRestant']);
-$router->get('/showTableauRecap', [$villeController, 'showRecapitulatif']);
+$router->get('/showTableauRecap', [$dispatchController, 'showTableauRecapitulatif']);
 $router->get('/showTableauRecap/json', [$villeController, 'getRecapitulatifJson']);
 
 

@@ -550,6 +550,105 @@
             </div>
         <?php endif; ?>
 
+        <!-- ── Tableau récapitulatif des distributions par ville ───────── -->
+        <?php if (!empty($tableau_recap) && is_array($tableau_recap)): ?>
+            <div class="section-title">
+                <h2>📊 Récapitulatif des distributions par ville</h2>
+                <span class="line"></span>
+            </div>
+
+            <?php if (!empty($dispatch_result) && isset($dispatch_result['success'])): ?>
+                <div class="card" style="margin-bottom: 20px; padding: 16px; background: <?= $dispatch_result['success'] ? '#ecfdf5' : '#fef2f2' ?>; border-left: 4px solid <?= $dispatch_result['success'] ? '#22c55e' : '#ef4444' ?>;">
+                    <strong><?= $dispatch_result['success'] ? '✅ Succès' : '❌ Erreur' ?>:</strong>
+                    <?= htmlspecialchars($dispatch_result['message'] ?? '') ?>
+                    <?php if (!empty($dispatch_result['distributions'])): ?>
+                        <ul style="margin-top: 8px; margin-left: 20px;">
+                            <?php foreach ($dispatch_result['distributions'] as $dist): ?>
+                                <li><?= htmlspecialchars($dist['nom_ville']) ?> : <?= $dist['quantite_attribuee'] ?> unités attribuées</li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+            
+            <div class="card">
+                <div class="card-head">
+                    <span class="dot dot-blue"></span>
+                    Besoins et Dons attribués par Ville et Produit
+                    <a href="<?= $base_url ?>/showTableauRecap" style="margin-left: auto; font-size: 13px; color: #2563eb; text-decoration: none;">Voir détails →</a>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Produit</th>
+                                <th>Besoin Total</th>
+                                <th>Dons Attribués</th>
+                                <th>Restant</th>
+                                <th>Couverture</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $totalBesoin = 0;
+                            $totalAttribue = 0;
+                            foreach ($tableau_recap as $row): 
+                                $besoin = (int)($row['total_besoin'] ?? 0);
+                                $attribue = (int)($row['total_attribue'] ?? 0);
+                                $restant = max(0, $besoin - $attribue);
+                                $pourcent = $besoin > 0 ? round(($attribue / $besoin) * 100, 1) : 0;
+                                $totalBesoin += $besoin;
+                                $totalAttribue += $attribue;
+                            ?>
+                                <tr>
+                                    <td><strong><?php echo htmlspecialchars($row['nom_ville'] ?? ''); ?></strong></td>
+                                    <td><?php echo htmlspecialchars($row['nom_produit'] ?? ''); ?></td>
+                                    <td><span class="tag tag-blue"><?php echo number_format($besoin); ?></span></td>
+                                    <td><span class="tag tag-green"><?php echo number_format($attribue); ?></span></td>
+                                    <td>
+                                        <?php if ($restant > 0): ?>
+                                            <span class="tag tag-amber"><?php echo number_format($restant); ?></span>
+                                        <?php else: ?>
+                                            <span class="tag tag-green">0</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: <?php echo min(100, $pourcent); ?>%; background: <?php echo $pourcent >= 80 ? '#22c55e' : ($pourcent >= 50 ? '#f59e0b' : '#ef4444'); ?>;"></div>
+                                            </div>
+                                            <span class="progress-value"><?php echo $pourcent; ?>%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <?php 
+                        $totalRestant = $totalBesoin - $totalAttribue;
+                        $tauxGlobal = $totalBesoin > 0 ? round(($totalAttribue / $totalBesoin) * 100, 1) : 0;
+                        ?>
+                        <tfoot style="background: #f8fafc; font-weight: 600;">
+                            <tr>
+                                <td colspan="2"><strong>TOTAL GÉNÉRAL</strong></td>
+                                <td><span class="tag tag-blue"><?= number_format($totalBesoin) ?></span></td>
+                                <td><span class="tag tag-green"><?= number_format($totalAttribue) ?></span></td>
+                                <td><span class="tag <?= $totalRestant > 0 ? 'tag-amber' : 'tag-green' ?>"><?= number_format(max(0, $totalRestant)) ?></span></td>
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: <?= min(100, $tauxGlobal) ?>%; background: <?= $tauxGlobal >= 80 ? '#22c55e' : ($tauxGlobal >= 50 ? '#f59e0b' : '#ef4444') ?>;"></div>
+                                        </div>
+                                        <span class="progress-value"><?= $tauxGlobal ?>%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        <?php endif; ?>
+
     </div>
     
     <?php Flight::render('partial/footer.php'); ?>
