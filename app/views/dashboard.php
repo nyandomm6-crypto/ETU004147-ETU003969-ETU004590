@@ -332,6 +332,7 @@
     <?php Flight::render('partial/header.php'); ?>
 
     <div class="container">
+        <button onclick="renitialiser()">renitialiser</button>
 
         <!-- ── Quick Stats ─────────────────────── -->
         <div class="stats-grid">
@@ -652,6 +653,33 @@
     </div>
     
     <?php Flight::render('partial/footer.php'); ?>
+    <div style="display:none" id="base_url"><?= $base_url ?></div>
+
+    <script>
+        function renitialiser(){
+            if (confirm("Êtes-vous sûr de vouloir réinitialiser les données ?")) {
+                fetch(document.getElementById('base_url').textContent + '/renitialiser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        alert("Réinitialisation réussie.");
+                        window.location.reload();
+                    } else {
+                        alert("Erreur lors de la réinitialisation.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert("Erreur réseau lors de la réinitialisation.");
+                });
+            }
+        }
+    </script>
 
 </body>
 </html>

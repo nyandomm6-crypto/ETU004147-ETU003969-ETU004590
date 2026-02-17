@@ -50,6 +50,7 @@ $router->post('/prixEstimatif', [$achatController, 'createPrixAchat']);
 $router->post('/validateAchat', [$achatController, 'validateAchat']);
 $router->get('/getDonArgent', [$achatController, 'getDonArgent']);
 
+$router->post('/renitialiser', [$villeController, 'renitialiser']);
 
 
 
