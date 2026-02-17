@@ -53,7 +53,7 @@ class AchatController
         } else {
             $besoins = $this->villeModel->getResteBesoinParProduitParVille();
             $this->app->render('listBesoinRestant.php', [
-                'error' => 'don mbola misy',
+                'error' => 'don existant pour ce produit, veuillez d\'abord épuiser le don avant de faire un achat',
                 'base_url' => Flight::get('flight.base_url'),
                 'besoins' => $besoins
             ]);
