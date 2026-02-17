@@ -23,10 +23,6 @@ class CategorieModel
     public function renitialiser($nomFichiersql)
     {
         try {
-            $this->db->exec("DELETE FROM don");
-            $this->db->exec("DELETE FROM dispatch");
-            $this->db->exec("DELETE FROM besoin");
-            $this->db->exec("DELETE FROM achat");
 
             $sql = file_get_contents($nomFichiersql);
 

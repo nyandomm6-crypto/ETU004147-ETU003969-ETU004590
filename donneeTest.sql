@@ -1,23 +1,31 @@
+
 INSERT INTO ville (nom_ville) VALUES
-('Antananarivo'),
 ('Toamasina'),
-('Fianarantsoa'),
-('Mahajanga'),
-('Toliara');
+('Mananjary'),
+('Farafangana'),
+('Nosy Be'),
+('Morondava');
 
 INSERT INTO categorie (nom_categorie) VALUES
-('Nature'),
-('Materiaux'),
+('nature'),
+('materiel'),
 ('Financier');
 
 
+-- nature = 1
+-- materiel = 2
+-- argent = 3
+
 INSERT INTO produit (id_categorie, prix_unitaire, nom_produit) VALUES
-(1, 2500.00, 'Riz'),
-(1, 8000.00, 'Huile'),
-(1, 1200.00, 'Sucre'),
+(1, 3000, 'Riz (kg)'),
+(1, 1000, 'Eau (L)'),
+(1, 6000, 'Huile (L)'),
+(1, 4000, 'Haricots'),
 
-(2, 15000.00, 'Tôle'),
-(2, 500.00, 'Clou'),
-(2, 35000.00, 'Bois'),
+(2, 25000, 'Tôle'),
+(2, 15000, 'Bâche'),
+(2, 8000, 'Clous (kg)'),
+(2, 10000, 'Bois'),
+(2, 6750000, 'Groupe'),
 
-(3, 1.00, 'Argent');
+(3, 1, 'Argent');
