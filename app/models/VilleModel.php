@@ -96,7 +96,7 @@ class VilleModel
                 ) aa ON bb.id_produit = aa.id_produit
                 JOIN ville v ON bb.id_ville = v.id_ville
                 JOIN produit p ON bb.id_produit = p.id_produit
-                HAVING reste > 0
+                HAVING reste > 0 AND p.nom_produit !='Argent'
                 ORDER BY v.nom_ville, p.nom_produit";
 
         $stmt = $this->db->query($sql);
