@@ -73,30 +73,30 @@ Version 1
 Version 2
 
 -Don(Miantra)
-    -DonModel
-        -getAllDonArgent
+   ✅ -DonModel
+        ✅-getAllDonArgent
     
     
 -Besoin(Ando)
-    -BesoinModel
-        -getAllBesoinRestantByCategorie
+   ✅ -BesoinModel
+       ✅ -getAllBesoinRestantByCategorie
 
-    -BesoinController
+   ✅ -BesoinController
 
     -view
-        -listBesoinRestant.php : afficher liste besoin restant par categorie en affichant les villes correspondant
+       ✅ -listBesoinRestant.php : afficher liste besoin restant par categorie en affichant les villes correspondant
 
 -Achat
-    -AchatModel
-        -createAchat
+   ✅ -AchatModel
+        ✅-createAchat
 
-    -AchatController
+   ✅ -AchatController
 
     -view
-        -formuAchat.php :(Tsanta)
-            -total don argent atuel
-            -frais achat
-            -quantite_achat
+        ✅-formuAchat.php :(Tsanta)
+        ✅    -total don argent atuel
+        ✅   -frais achat
+        ✅    -quantite_achat
         
 
 -Design(Tsanta) : en cours
