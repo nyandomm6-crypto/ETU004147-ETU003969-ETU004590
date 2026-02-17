@@ -34,6 +34,10 @@ $router->get('/showFormDispatch', [$dispatchController, 'showFormDispatch']);
 $router->get('/listBesoinRestant', [$villeController, 'getListBesoinRestant']);
 $router->get('/showTableauRecap', [$dispatchController, 'showTableauRecapitulatif']);
 $router->get('/showTableauRecap/json', [$villeController, 'getRecapitulatifJson']);
+$router->get('/showListDon', [$donController, 'showListDon']);
+$router->get('/showListBesoin', [$BesoinController, 'showListBesoin']);
+
+
 
 
 

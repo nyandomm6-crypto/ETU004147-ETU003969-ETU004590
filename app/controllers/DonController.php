@@ -40,7 +40,7 @@ class DonController
             'quantite' => $data['quantite']
         ];
         $this->donModel->createDon($donnee);
-        $this->showListDon();
+        $this->app->redirect('showListDon');
 
     }
 
