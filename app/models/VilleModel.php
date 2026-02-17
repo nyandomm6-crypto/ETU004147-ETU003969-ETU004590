@@ -79,16 +79,14 @@ class VilleModel
                        COALESCE(aa.total_achats, 0) AS total_achats,
                        (bb.total_besoin - COALESCE(dd.total_attribue, 0) - COALESCE(aa.total_achats, 0)) AS reste
                 FROM (
-                    SELECT id_ville, id_produit, SUM(quantite) AS total_besoin
+                    SELECT id_ville, id_produit, SUM(quantite_max) AS total_besoin
                     FROM besoin
-                    WHERE quantite > 0
                     GROUP BY id_ville, id_produit
                 ) bb
                 LEFT JOIN (
                     SELECT b.id_ville, b.id_produit, SUM(d.quantite_attribuee) AS total_attribue
                     FROM dispatch d
                     JOIN besoin b ON d.id_besoin = b.id_besoin
-                    WHERE b.quantite > 0
                     GROUP BY b.id_ville, b.id_produit
                 ) dd ON bb.id_ville = dd.id_ville AND bb.id_produit = dd.id_produit
                 LEFT JOIN (
@@ -119,7 +117,7 @@ class VilleModel
                         GROUP BY id_besoin
                     ) d_sum ON b2.id_besoin = d_sum.id_besoin
                     WHERE b2.quantite > 0
-                      AND d_sum.total_dispatch >= b2.quantite
+                      AND d_sum.total_dispatch >= b2.quantite_max
                 ) epuises ON b.id_besoin = epuises.id_besoin
                 SET b.quantite = 0";
 
@@ -137,7 +135,7 @@ class VilleModel
     public function getRecapitulatifMontant(): array
     {
         // Montant total des besoins (toutes les lignes besoin, y compris quantite=0 historique)
-        $sqlBesoin = "SELECT COALESCE(SUM(b.quantite * p.prix_unitaire), 0) AS montant_besoin_total
+        $sqlBesoin = "SELECT COALESCE(SUM(b.quantite_max * p.prix_unitaire), 0) AS montant_besoin_total
                       FROM besoin b
                       JOIN produit p ON b.id_produit = p.id_produit
                       JOIN categorie c ON p.id_categorie = c.id_categorie
@@ -162,7 +160,7 @@ class VilleModel
                       FROM produit p
                       JOIN categorie c ON p.id_categorie = c.id_categorie
                       LEFT JOIN (
-                          SELECT id_produit, SUM(quantite) AS total_qte FROM besoin GROUP BY id_produit
+                          SELECT id_produit, SUM(quantite_max) AS total_qte FROM besoin GROUP BY id_produit
                       ) bb ON p.id_produit = bb.id_produit
                       LEFT JOIN (
                           SELECT b.id_produit, SUM(d.quantite_attribuee) AS total_attribue

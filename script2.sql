@@ -23,6 +23,7 @@ CREATE TABLE besoin (
     id_ville INT NOT NULL,
     id_produit INT NOT NULL,
     quantite INT NOT NULL,
+    quantite_max INT NOT NULL,
     date_saisie DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE don (

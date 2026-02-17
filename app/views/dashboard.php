@@ -332,224 +332,26 @@
     <?php Flight::render('partial/header.php'); ?>
 
     <div class="container">
-        <button onclick="renitialiser()">renitialiser</button>
-
-        <!-- ── Quick Stats ─────────────────────── -->
-        <div class="stats-grid">
-            <?php 
-            $total_villes = is_array($villes) ? count($villes) : 0;
-            $total_besoins = 0;
-            $total_dons = is_array($dons) ? count($dons) : 0;
-            
-            if (!empty($villes) && is_array($villes)) {
-                foreach ($villes as $ville) {
-                    $total_besoins += isset($ville['besoins']) ? count($ville['besoins']) : 0;
-                }
-            }
-            ?>
-            <div class="stat-card">
-                <div class="stat-label">Villes actives</div>
-                <div class="stat-value"><?php echo $total_villes; ?></div>
-                <div class="stat-trend">
-                    <span>📍</span>
-                    <span>Centres de distribution</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Besoins en cours</div>
-                <div class="stat-value"><?php echo $total_besoins; ?></div>
-                <div class="stat-trend">
-                    <span>📦</span>
-                    <span>Articles nécessaires</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Dons reçus</div>
-                <div class="stat-value"><?php echo $total_dons; ?></div>
-                <div class="stat-trend">
-                    <span>🎁</span>
-                    <span>Contributions enregistrées</span>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Taux de couverture</div>
-                <div class="stat-value">
-                    <?php 
-                    $couverture = 0;
-                    if ($total_besoins > 0 && !empty($dispatches)) {
-                        $total_attribue = 0;
-                        foreach ($dispatches as $d) {
-                            $total_attribue += intval($d['quantite_attribuee'] ?? 0);
-                        }
-                        $couverture = min(100, round(($total_attribue / $total_besoins) * 100));
-                    }
-                    echo $couverture . '%';
-                    ?>
-                </div>
-                <div class="progress" style="margin-top: 12px;">
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: <?php echo $couverture; ?>%"></div>
-                    </div>
-                    <span class="progress-value"><?php echo $couverture; ?>%</span>
-                </div>
-            </div>
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
+            <button onclick="renitialiser()" style="
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 12px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+                transition: transform 0.2s, box-shadow 0.2s;
+            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(239, 68, 68, 0.5)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px rgba(239, 68, 68, 0.4)';">
+                🔄 Réinitialiser les données
+            </button>
         </div>
-
-        <!-- ── Villes et besoins ────────────────── -->
-        <div class="section-title">
-            <h2>Villes et besoins</h2>
-            <span class="line"></span>
-        </div>
-
-        <?php if (!empty($villes) && is_array($villes)): ?>
-            <?php foreach ($villes as $ville): ?>
-                <div class="card">
-                    <div class="card-head">
-                        <span class="dot dot-blue"></span>
-                        <?php echo htmlspecialchars($ville['nom_ville'] ?? 'Ville inconnue'); ?>
-                        <?php if (!empty($ville['besoins'])): ?>
-                            <span class="tag tag-blue" style="margin-left: auto;">
-                                <?php echo count($ville['besoins']); ?> besoin(s)
-                            </span>
-                        <?php endif; ?>
-                    </div>
-
-                    <?php if (!empty($ville['besoins'])): ?>
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Produit</th>
-                                        <th>Prix unitaire</th>
-                                        <th>Quantité</th>
-                                        <th>Valeur totale</th>
-                                        <th>Date saisie</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($ville['besoins'] as $besoin): ?>
-                                        <tr>
-                                            <td><strong><?php echo htmlspecialchars($besoin['nom_produit'] ?? ''); ?></strong></td>
-                                            <td><?php echo number_format((float)($besoin['prix_unitaire'] ?? 0), 2); ?> €</td>
-                                            <td><span class="tag tag-blue"><?php echo htmlspecialchars($besoin['quantite'] ?? ''); ?></span></td>
-                                            <td><?php $total = (float)($besoin['prix_unitaire'] ?? 0) * (int)($besoin['quantite'] ?? 0); echo number_format($total,2); ?> €</td>
-                                            <td><?php echo htmlspecialchars($besoin['date_saisie'] ?? ''); ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php else: ?>
-                        <p class="empty">Aucun besoin saisi pour cette ville.</p>
-                    <?php endif; ?>
-
-                    <?php if (!empty($ville['dons'])): ?>
-                        <div class="card-head" style="border-top:1px solid #f0f4f8;">
-                            <span class="dot dot-green"></span> 
-                            Dons reçus
-                            <span class="tag tag-green" style="margin-left: auto;">
-                                <?php echo count($ville['dons']); ?> don(s)
-                            </span>
-                        </div>
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Produit</th>
-                                        <th>Quantité</th>
-                                        <th>Date don</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($ville['dons'] as $don): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($don['nom_produit'] ?? ''); ?></td>
-                                            <td><span class="tag tag-green"><?php echo htmlspecialchars($don['quantite'] ?? ''); ?></span></td>
-                                            <td><?php echo htmlspecialchars($don['date_don'] ?? ''); ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div class="card"><p class="empty">Aucune ville disponible. Veuillez saisir des villes et besoins.</p></div>
-        <?php endif; ?>
-
-
-        <!-- ── Liste des dons ─────────────── -->
-        <div class="section-title">
-            <h2>Dons</h2>
-            <span class="line"></span>
-        </div>
-
-        <div class="card">
-            <?php if (!empty($dons) && is_array($dons)): ?>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ville</th>
-                                <th>Produit</th>
-                                <th>Quantité</th>
-                                <th>Date don</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($dons as $don): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($don['nom_ville'] ?? ''); ?></td>
-                                    <td><?php echo htmlspecialchars($don['nom_produit'] ?? ''); ?></td>
-                                    <td><span class="tag tag-green"><?php echo htmlspecialchars($don['quantite'] ?? ''); ?></span></td>
-                                    <td><?php echo htmlspecialchars($don['date_don'] ?? ''); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <p class="empty">Aucun don enregistré.</p>
-            <?php endif; ?>
-        </div>
-
-        <!-- ── Résultats du dispatch ───────── -->
-        <?php if (!empty($dispatches) && is_array($dispatches)): ?>
-            <div class="section-title">
-                <h2>Résultats du dispatch</h2>
-                <span class="line"></span>
-            </div>
-            
-            <div class="card">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ville</th>
-                                <th>Produit</th>
-                                <th>Don (ID)</th>
-                                <th>Besoin (ID)</th>
-                                <th>Qté attribuée</th>
-                                <th>Date dispatch</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($dispatches as $d): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($d['nom_ville'] ?? ''); ?></td>
-                                    <td><?php echo htmlspecialchars($d['nom_produit'] ?? ''); ?></td>
-                                    <td><span class="tag tag-amber">#<?php echo htmlspecialchars($d['id_don'] ?? ''); ?></span></td>
-                                    <td><span class="tag tag-blue">#<?php echo htmlspecialchars($d['id_besoin'] ?? ''); ?></span></td>
-                                    <td><span class="tag tag-green"><?php echo htmlspecialchars($d['quantite_attribuee'] ?? ''); ?></span></td>
-                                    <td><?php echo htmlspecialchars($d['date_dispatch'] ?? ''); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        <?php endif; ?>
 
         <!-- ── Tableau récapitulatif des distributions par ville ───────── -->
         <?php if (!empty($tableau_recap) && is_array($tableau_recap)): ?>
@@ -645,6 +447,197 @@
                                 </td>
                             </tr>
                         </tfoot>
+                    </table>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- ── Quick Stats ─────────────────────── -->
+        <div class="stats-grid">
+            <?php 
+            $total_villes = is_array($villes) ? count($villes) : 0;
+            $total_besoins = 0;
+            $total_dons = is_array($dons) ? count($dons) : 0;
+            
+            if (!empty($villes) && is_array($villes)) {
+                foreach ($villes as $ville) {
+                    $total_besoins += isset($ville['besoins']) ? count($ville['besoins']) : 0;
+                }
+            }
+            ?>
+            <div class="stat-card">
+                <div class="stat-label">Villes actives</div>
+                <div class="stat-value"><?php echo $total_villes; ?></div>
+                <div class="stat-trend">
+                    <span>📍</span>
+                    <span>Centres de distribution</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Besoins en cours</div>
+                <div class="stat-value"><?php echo $total_besoins; ?></div>
+                <div class="stat-trend">
+                    <span>📦</span>
+                    <span>Articles nécessaires</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Dons reçus</div>
+                <div class="stat-value"><?php echo $total_dons; ?></div>
+                <div class="stat-trend">
+                    <span>🎁</span>
+                    <span>Contributions enregistrées</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Taux de couverture</div>
+                <div class="stat-value">
+                    <?php 
+                    $couverture = 0;
+                    if ($total_besoins > 0 && !empty($dispatches)) {
+                        $total_attribue = 0;
+                        foreach ($dispatches as $d) {
+                            $total_attribue += intval($d['quantite_attribuee'] ?? 0);
+                        }
+                        $couverture = min(100, round(($total_attribue / $total_besoins) * 100));
+                    }
+                    echo $couverture . '%';
+                    ?>
+                </div>
+                <div class="progress" style="margin-top: 12px;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: <?php echo $couverture; ?>%"></div>
+                    </div>
+                    <span class="progress-value"><?php echo $couverture; ?>%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Villes et besoins ────────────────── -->
+        <div class="section-title">
+            <h2>Villes et besoins</h2>
+            <span class="line"></span>
+        </div>
+
+        <?php if (!empty($villes) && is_array($villes)): ?>
+            <?php foreach ($villes as $ville): ?>
+                <div class="card">
+                    <div class="card-head">
+                        <span class="dot dot-blue"></span>
+                        <?php echo htmlspecialchars($ville['nom_ville'] ?? 'Ville inconnue'); ?>
+                        <?php if (!empty($ville['besoins'])): ?>
+                            <span class="tag tag-blue" style="margin-left: auto;">
+                                <?php echo count($ville['besoins']); ?> besoin(s)
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <?php if (!empty($ville['besoins'])): ?>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Prix unitaire</th>
+                                        <th>Besoin Total</th>
+                                        <th>Restant</th>
+                                        <th>Valeur totale</th>
+                                        <th>Date saisie</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($ville['besoins'] as $besoin): ?>
+                                        <tr>
+                                            <td><strong><?php echo htmlspecialchars($besoin['nom_produit'] ?? ''); ?></strong></td>
+                                            <td><?php echo number_format((float)($besoin['prix_unitaire'] ?? 0), 2); ?> Ar</td>
+                                            <td><span class="tag tag-blue"><?php echo htmlspecialchars($besoin['quantite_max'] ?? $besoin['quantite'] ?? ''); ?></span></td>
+                                            <td>
+                                                <?php 
+                                                $restant = (int)($besoin['quantite'] ?? 0);
+                                                if ($restant > 0): ?>
+                                                    <span class="tag tag-amber"><?php echo $restant; ?></span>
+                                                <?php else: ?>
+                                                    <span class="tag tag-green">0 (Satisfait)</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><?php $total = (float)($besoin['prix_unitaire'] ?? 0) * (int)($besoin['quantite_max'] ?? $besoin['quantite'] ?? 0); echo number_format($total,2); ?> Ar</td>
+                                            <td><?php echo htmlspecialchars($besoin['date_saisie'] ?? ''); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p class="empty">Aucun besoin saisi pour cette ville.</p>
+                    <?php endif; ?>
+
+                    <?php if (!empty($ville['dons'])): ?>
+                        <div class="card-head" style="border-top:1px solid #f0f4f8;">
+                            <span class="dot dot-green"></span> 
+                            Dons reçus
+                            <span class="tag tag-green" style="margin-left: auto;">
+                                <?php echo count($ville['dons']); ?> don(s)
+                            </span>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Quantité</th>
+                                        <th>Date don</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($ville['dons'] as $don): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($don['nom_produit'] ?? ''); ?></td>
+                                            <td><span class="tag tag-green"><?php echo htmlspecialchars($don['quantite'] ?? ''); ?></span></td>
+                                            <td><?php echo htmlspecialchars($don['date_don'] ?? ''); ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="card"><p class="empty">Aucune ville disponible. Veuillez saisir des villes et besoins.</p></div>
+        <?php endif; ?>
+
+        <!-- ── Résultats du dispatch ───────── -->
+        <?php if (!empty($dispatches) && is_array($dispatches)): ?>
+            <div class="section-title">
+                <h2>Résultats du dispatch</h2>
+                <span class="line"></span>
+            </div>
+            
+            <div class="card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ville</th>
+                                <th>Produit</th>
+                                <th>Don (ID)</th>
+                                <th>Besoin (ID)</th>
+                                <th>Qté attribuée</th>
+                                <th>Date dispatch</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($dispatches as $d): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($d['nom_ville'] ?? ''); ?></td>
+                                    <td><?php echo htmlspecialchars($d['nom_produit'] ?? ''); ?></td>
+                                    <td><span class="tag tag-amber">#<?php echo htmlspecialchars($d['id_don'] ?? ''); ?></span></td>
+                                    <td><span class="tag tag-blue">#<?php echo htmlspecialchars($d['id_besoin'] ?? ''); ?></span></td>
+                                    <td><span class="tag tag-green"><?php echo htmlspecialchars($d['quantite_attribuee'] ?? ''); ?></span></td>
+                                    <td><?php echo htmlspecialchars($d['date_dispatch'] ?? ''); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
                     </table>
                 </div>
             </div>

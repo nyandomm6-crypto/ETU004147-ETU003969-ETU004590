@@ -17,14 +17,15 @@ class BesoinModel
     public function createBesoin(array $data): bool
     {
         $stmt = $this->db->prepare(
-            "INSERT INTO besoin (id_ville, id_produit, quantite)
-             VALUES (:id_ville, :id_produit, :quantite)"
+            "INSERT INTO besoin (id_ville, id_produit, quantite, quantite_max)
+             VALUES (:id_ville, :id_produit, :quantite, :quantite_max)"
         );
 
         return $stmt->execute([
             ':id_ville' => $data['id_ville'],
             ':id_produit' => $data['id_produit'],
-            ':quantite' => $data['quantite']
+            ':quantite' => $data['quantite'],
+            ':quantite_max' => $data['quantite']
         ]);
     }
     public function getAllBesoin(): array
@@ -52,7 +53,7 @@ class BesoinModel
     public function getVillesWithBesoins(): array
     {
         $sql = "SELECT v.id_ville, v.nom_ville,
-                       b.id_besoin, b.id_produit, b.quantite, b.date_saisie,
+                       b.id_besoin, b.id_produit, b.quantite, b.quantite_max, b.date_saisie,
                        p.nom_produit, p.prix_unitaire
                 FROM ville v
                 LEFT JOIN besoin b ON v.id_ville = b.id_ville
@@ -78,6 +79,7 @@ class BesoinModel
                     'id_besoin' => $r['id_besoin'],
                     'id_produit' => $r['id_produit'],
                     'quantite' => $r['quantite'],
+                    'quantite_max' => $r['quantite_max'],
                     'date_saisie' => $r['date_saisie'],
                     'nom_produit' => $r['nom_produit'],
                     'prix_unitaire' => $r['prix_unitaire']

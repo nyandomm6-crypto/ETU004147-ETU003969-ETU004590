@@ -147,7 +147,7 @@ class DispatchModel
     public function getDispatchSummaryByVille(): array
     {
         $sql = "SELECT v.id_ville, v.nom_ville,
-                       COALESCE(SUM(b.quantite),0) AS total_besoin,
+                       COALESCE(SUM(b.quantite_max),0) AS total_besoin,
                        COALESCE(SUM(d.quantite_attribuee),0) AS total_attribue
                 FROM ville v
                 LEFT JOIN besoin b ON v.id_ville = b.id_ville
@@ -462,9 +462,9 @@ class DispatchModel
                     p.id_produit,
                     p.nom_produit,
                     p.prix_unitaire,
-                    COALESCE(SUM(b.quantite), 0) AS total_besoin,
+                    COALESCE(SUM(b.quantite_max), 0) AS total_besoin,
                     COALESCE(SUM(d.quantite_attribuee), 0) AS total_attribue,
-                    (COALESCE(SUM(b.quantite), 0) - COALESCE(SUM(d.quantite_attribuee), 0)) AS besoin_restant
+                    (COALESCE(SUM(b.quantite_max), 0) - COALESCE(SUM(d.quantite_attribuee), 0)) AS besoin_restant
                 FROM ville v
                 LEFT JOIN besoin b ON v.id_ville = b.id_ville
                 LEFT JOIN produit p ON b.id_produit = p.id_produit
