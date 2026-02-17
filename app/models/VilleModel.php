@@ -77,16 +77,24 @@ class VilleModel
 
     public function getResteBesoinParProduitParVille(): array
     {
-        $sql = "SELECT v.id_ville, v.nom_ville,
-                       p.id_produit, p.nom_produit,
-                       SUM(b.quantite) AS total_besoin,
-                       COALESCE(SUM(d.quantite_attribuee), 0) AS total_attribue,
-                       (SUM(b.quantite) - COALESCE(SUM(d.quantite_attribuee), 0)) AS reste
-                FROM besoin b
-                JOIN ville v ON b.id_ville = v.id_ville
-                JOIN produit p ON b.id_produit = p.id_produit
-                LEFT JOIN dispatch d ON b.id_besoin = d.id_besoin
-                GROUP BY v.id_ville, v.nom_ville, p.id_produit, p.nom_produit
+        $sql = "SELECT bb.id_ville, v.nom_ville,
+                       bb.id_produit, p.nom_produit,
+                       bb.total_besoin,
+                       COALESCE(dd.total_attribue, 0) AS total_attribue,
+                       (bb.total_besoin - COALESCE(dd.total_attribue, 0)) AS reste
+                FROM (
+                    SELECT id_ville, id_produit, SUM(quantite) AS total_besoin
+                    FROM besoin
+                    GROUP BY id_ville, id_produit
+                ) bb
+                LEFT JOIN (
+                    SELECT b.id_ville, b.id_produit, SUM(d.quantite_attribuee) AS total_attribue
+                    FROM dispatch d
+                    JOIN besoin b ON d.id_besoin = b.id_besoin
+                    GROUP BY b.id_ville, b.id_produit
+                ) dd ON bb.id_ville = dd.id_ville AND bb.id_produit = dd.id_produit
+                JOIN ville v ON bb.id_ville = v.id_ville
+                JOIN produit p ON bb.id_produit = p.id_produit
                 HAVING reste > 0
                 ORDER BY v.nom_ville, p.nom_produit";
 
